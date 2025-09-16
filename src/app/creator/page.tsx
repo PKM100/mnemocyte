@@ -272,23 +272,43 @@ export default function CharacterCreator() {
 
     return (
         <main className="min-h-screen bg-gradient-to-b from-minecraft-sky to-minecraft-grass p-4">
+            {/* Fixed notification in top right */}
+            {saveMessage && (
+                <div className="fixed top-4 right-4 z-50 max-w-sm transform transition-all duration-300 ease-in-out animate-pulse">
+                    <MinecraftPanel className="shadow-xl border-4 border-minecraft-accent bg-minecraft-dark/90 backdrop-blur-sm">
+                        <p className="text-minecraft-sm font-minecraft text-center text-white px-3 py-2">
+                            {saveMessage}
+                        </p>
+                    </MinecraftPanel>
+                </div>
+            )}
+
             <div className="container mx-auto max-w-6xl">
-                {/* Header */}
+                {/* Header with Logo */}
                 <div className="minecraft-panel mb-6 text-center">
-                    <div className="flex justify-between items-center mb-4">
-                        <a href="/">
-                            <MinecraftButton variant="secondary" size="sm">
-                                ← Back to Home
-                            </MinecraftButton>
-                        </a>
-                        <div></div> {/* Spacer for center alignment */}
+                    <div className="flex justify-center mb-4">
+                        <img
+                            src="/mnemocyte.png"
+                            alt="Mnemocyte Logo"
+                            className="h-16 pixelated"
+                            style={{ width: 'auto' }}
+                        />
                     </div>
                     <h1 className="text-2xl font-minecraft text-white mb-2">
-                        {isEditing ? '✏️ Edit Character' : '🧠 FOXP2 Character Creator'}
+                        {isEditing ? 'EDIT CHARACTER' : 'CHARACTER CREATOR'}
                     </h1>
                     <p className="text-minecraft-xs text-gray-300">
                         {isEditing ? `Editing: ${character.name || 'Unnamed Character'}` : 'Design NPCs with advanced neural memory systems'}
                     </p>
+                </div>
+
+                {/* Navigation */}
+                <div className="flex justify-start mb-4">
+                    <a href="/">
+                        <MinecraftButton variant="secondary" size="sm">
+                            ← Back to Home
+                        </MinecraftButton>
+                    </a>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -493,14 +513,7 @@ export default function CharacterCreator() {
                             </div>
                         </MinecraftPanel>
 
-                        {/* Save Status Message */}
-                        {saveMessage && (
-                            <MinecraftPanel className="mb-4">
-                                <p className="text-minecraft-sm font-minecraft text-center text-white">
-                                    {saveMessage}
-                                </p>
-                            </MinecraftPanel>
-                        )}
+
 
                         {/* Actions */}
                         <div className="flex gap-4">

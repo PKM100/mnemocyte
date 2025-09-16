@@ -97,26 +97,36 @@ export default function CharactersList() {
     return (
         <main className="min-h-screen bg-gradient-to-b from-minecraft-sky to-minecraft-grass p-4">
             <div className="container mx-auto max-w-6xl">
-                {/* Header */}
+                {/* Header with Logo */}
                 <div className="minecraft-panel mb-6 text-center">
+                    <div className="flex justify-center mb-4">
+                        <img
+                            src="/mnemocyte.png"
+                            alt="Mnemocyte Logo"
+                            className="h-16 pixelated"
+                            style={{ width: 'auto' }}
+                        />
+                    </div>
                     <h1 className="text-2xl font-minecraft text-white mb-2">
-                        📚 FOXP2 Character Library
+                        CHARACTER LIBRARY
                     </h1>
-                    <p className="text-minecraft-xs text-gray-300 mb-4">
+                    <p className="text-minecraft-xs text-gray-300">
                         Manage your saved NPCs with neural memory systems
                     </p>
-                    <div className="flex gap-4 justify-center">
-                        <Link href="/creator">
-                            <MinecraftButton>
-                                ➕ Create New Character
-                            </MinecraftButton>
-                        </Link>
-                        <Link href="/">
-                            <MinecraftButton variant="secondary">
-                                🏠 Home
-                            </MinecraftButton>
-                        </Link>
-                    </div>
+                </div>
+
+                {/* Navigation */}
+                <div className="flex gap-4 justify-center mb-6">
+                    <Link href="/creator">
+                        <MinecraftButton>
+                            ➕ Create New Character
+                        </MinecraftButton>
+                    </Link>
+                    <Link href="/">
+                        <MinecraftButton variant="secondary">
+                            🏠 Home
+                        </MinecraftButton>
+                    </Link>
                 </div>
 
                 {error && (

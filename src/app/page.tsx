@@ -4,9 +4,14 @@ export default function Home() {
             <div className="container mx-auto max-w-6xl">
                 {/* Header */}
                 <div className="minecraft-panel mb-8 text-center">
-                    <h1 className="text-4xl font-minecraft text-white mb-2">
-                        MNEMOCYTE
-                    </h1>
+                    <div className="flex justify-center mb-4">
+                        <img
+                            src="/mnemocyte.png"
+                            alt="Mnemocyte Logo"
+                            className="h-24 pixelated"
+                            style={{ width: 'auto' }}
+                        />
+                    </div>
                     <p className="text-minecraft-sm text-gray-300 mb-4">
                         Smart NPCs with FOXP2 Neural Memory Systems
                     </p>
@@ -18,7 +23,12 @@ export default function Home() {
                 {/* Main Menu Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {/* Character Creator */}
-                    <div className="minecraft-panel">
+                    <div className="minecraft-panel relative">
+                        <img
+                            src="/mnemocyte.png"
+                            alt=""
+                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
+                        />
                         <div className="text-center mb-4">
                             <div className="w-16 h-16 mx-auto mb-3 relative overflow-hidden">
                                 {/* Base character silhouette */}
@@ -74,29 +84,104 @@ export default function Home() {
                     </div>
 
                     {/* Interactive Playground */}
-                    <div className="minecraft-panel">
+                    <div className="minecraft-panel relative">
+                        <img
+                            src="/mnemocyte.png"
+                            alt=""
+                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
+                        />
                         <div className="text-center mb-4">
                             <div className="w-16 h-16 mx-auto mb-3 relative overflow-hidden">
-                                {/* Soccer field background */}
-                                <div className="w-full h-full bg-green-500 border-minecraft-thick border-green-600 pixelated relative">
-                                    {/* Field lines */}
-                                    <div className="absolute top-0 left-1/2 w-0.5 h-full bg-white pixelated transform -translate-x-0.5"></div>
-                                    <div className="absolute top-1/2 left-0 w-full h-0.5 bg-white pixelated transform -translate-y-0.5"></div>
-                                    {/* Center circle */}
-                                    <div className="absolute top-1/2 left-1/2 w-4 h-4 border border-white rounded-full pixelated transform -translate-x-1/2 -translate-y-1/2"></div>
-                                    {/* Goal posts */}
-                                    <div className="absolute top-4 left-0 w-1 h-4 bg-white pixelated"></div>
-                                    <div className="absolute top-4 right-0 w-1 h-4 bg-white pixelated"></div>
-                                    {/* Moving soccer ball */}
-                                    <div className="absolute top-7 left-2 w-2 h-2 bg-black rounded-full pixelated animate-roll"></div>
-                                    <div className="absolute top-7 left-2 w-2 h-2 bg-white rounded-full pixelated animate-roll" style={{ clipPath: 'polygon(30% 30%, 70% 30%, 70% 70%, 30% 70%)' }}></div>
-                                    {/* Player figures moving */}
-                                    <div className="absolute top-3 left-6 w-1.5 h-3 bg-blue-400 pixelated animate-bounce duration-1500"></div>
-                                    <div className="absolute top-3 left-5 w-0.5 h-0.5 bg-blue-200 pixelated animate-bounce duration-1500"></div>
-                                    <div className="absolute bottom-3 right-6 w-1.5 h-3 bg-red-400 pixelated animate-bounce duration-1800 delay-500"></div>
-                                    <div className="absolute bottom-3 right-5 w-0.5 h-0.5 bg-red-200 pixelated animate-bounce duration-1800 delay-500"></div>
-                                    {/* Grass animation */}
-                                    <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-green-600/20 animate-pulse duration-3000"></div>
+                                {/* Enhanced Soccer field background */}
+                                <div className="w-full h-full bg-gradient-to-b from-green-400 to-green-600 border-minecraft-thick border-green-700 pixelated relative">
+                                    {/* Field texture pattern */}
+                                    <div className="absolute inset-0 opacity-30">
+                                        <div className="absolute top-1 left-1 w-1 h-1 bg-green-300 pixelated"></div>
+                                        <div className="absolute top-3 left-5 w-1 h-1 bg-green-300 pixelated"></div>
+                                        <div className="absolute top-5 left-2 w-1 h-1 bg-green-300 pixelated"></div>
+                                        <div className="absolute bottom-2 right-3 w-1 h-1 bg-green-300 pixelated"></div>
+                                        <div className="absolute bottom-4 right-1 w-1 h-1 bg-green-300 pixelated"></div>
+                                    </div>
+
+                                    {/* Enhanced field lines */}
+                                    <div className="absolute top-0 left-1/2 w-0.5 h-full bg-white pixelated transform -translate-x-0.5 shadow-sm"></div>
+                                    <div className="absolute top-1/2 left-0 w-full h-0.5 bg-white pixelated transform -translate-y-0.5 shadow-sm"></div>
+
+                                    {/* Center circle with better styling */}
+                                    <div className="absolute top-1/2 left-1/2 w-6 h-6 border-2 border-white rounded-full pixelated transform -translate-x-1/2 -translate-y-1/2 opacity-90"></div>
+                                    <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-white rounded-full pixelated transform -translate-x-1/2 -translate-y-1/2"></div>
+
+                                    {/* Enhanced goal areas */}
+                                    <div className="absolute top-2 left-0 w-0.5 h-8 bg-white pixelated"></div>
+                                    <div className="absolute top-2 right-0 w-0.5 h-8 bg-white pixelated"></div>
+                                    <div className="absolute top-2 left-0 w-3 h-0.5 bg-white pixelated"></div>
+                                    <div className="absolute top-2 right-0 w-3 h-0.5 bg-white pixelated transform -translate-x-full"></div>
+                                    <div className="absolute bottom-2 left-0 w-3 h-0.5 bg-white pixelated"></div>
+                                    <div className="absolute bottom-2 right-0 w-3 h-0.5 bg-white pixelated transform -translate-x-full"></div>
+
+                                    {/* Dynamic soccer ball with trail */}
+                                    <div className="absolute top-6 left-1 w-2.5 h-2.5 animate-enhanced-ball-movement">
+                                        {/* Ball shadow */}
+                                        <div className="absolute top-2 left-0 w-2.5 h-1 bg-black/20 rounded-full pixelated animate-shadow-follow"></div>
+                                        {/* Main ball */}
+                                        <div className="absolute top-0 left-0 w-2.5 h-2.5 bg-white rounded-full pixelated border border-black/30 animate-ball-spin">
+                                            {/* Ball pattern */}
+                                            <div className="absolute top-0.5 left-0.5 w-1.5 h-1.5 border border-black/50 rounded-full pixelated"></div>
+                                            <div className="absolute top-1 left-1 w-0.5 h-0.5 bg-black/60 rounded-full pixelated"></div>
+                                        </div>
+                                        {/* Ball trail effect */}
+                                        <div className="absolute top-0.5 left-0 w-1 h-1.5 bg-white/40 rounded-full pixelated animate-ball-trail"></div>
+                                    </div>
+
+                                    {/* Enhanced player figures with more detail */}
+                                    {/* Blue team player 1 - chasing ball */}
+                                    <div className="absolute top-4 left-5 animate-player-chase">
+                                        <div className="w-2 h-3.5 bg-blue-500 pixelated relative">
+                                            {/* Head */}
+                                            <div className="absolute -top-1 left-0.5 w-1 h-1 bg-yellow-200 pixelated rounded-sm"></div>
+                                            {/* Jersey number */}
+                                            <div className="absolute top-0.5 left-0.5 w-1 h-0.5 bg-white pixelated text-xs"></div>
+                                            {/* Arms */}
+                                            <div className="absolute top-1 -left-0.5 w-0.5 h-1.5 bg-yellow-200 pixelated animate-arm-swing"></div>
+                                            <div className="absolute top-1 -right-0.5 w-0.5 h-1.5 bg-yellow-200 pixelated animate-arm-swing delay-300"></div>
+                                            {/* Legs */}
+                                            <div className="absolute -bottom-1 left-0 w-0.5 h-1 bg-blue-600 pixelated animate-leg-run"></div>
+                                            <div className="absolute -bottom-1 right-0 w-0.5 h-1 bg-blue-600 pixelated animate-leg-run delay-150"></div>
+                                        </div>
+                                    </div>
+
+                                    {/* Red team player 1 - defending */}
+                                    <div className="absolute bottom-4 right-4 animate-player-defend">
+                                        <div className="w-2 h-3.5 bg-red-500 pixelated relative">
+                                            {/* Head */}
+                                            <div className="absolute -top-1 left-0.5 w-1 h-1 bg-yellow-200 pixelated rounded-sm"></div>
+                                            {/* Jersey */}
+                                            <div className="absolute top-0.5 left-0.5 w-1 h-0.5 bg-white pixelated"></div>
+                                            {/* Arms */}
+                                            <div className="absolute top-1 -left-0.5 w-0.5 h-1.5 bg-yellow-200 pixelated animate-arm-swing delay-100"></div>
+                                            <div className="absolute top-1 -right-0.5 w-0.5 h-1.5 bg-yellow-200 pixelated animate-arm-swing delay-400"></div>
+                                            {/* Legs */}
+                                            <div className="absolute -bottom-1 left-0 w-0.5 h-1 bg-red-600 pixelated animate-leg-run delay-75"></div>
+                                            <div className="absolute -bottom-1 right-0 w-0.5 h-1 bg-red-600 pixelated animate-leg-run delay-225"></div>
+                                        </div>
+                                    </div>
+
+                                    {/* Blue team player 2 - supporting */}
+                                    <div className="absolute top-2 right-6 animate-player-support">
+                                        <div className="w-1.5 h-3 bg-blue-400 pixelated relative">
+                                            <div className="absolute -top-0.5 left-0.5 w-0.5 h-0.5 bg-yellow-200 pixelated rounded-sm"></div>
+                                            <div className="absolute -bottom-0.5 left-0 w-0.5 h-0.5 bg-blue-600 pixelated"></div>
+                                            <div className="absolute -bottom-0.5 right-0 w-0.5 h-0.5 bg-blue-600 pixelated"></div>
+                                        </div>
+                                    </div>
+
+                                    {/* Animated grass wind effect */}
+                                    <div className="absolute inset-0 bg-gradient-to-br from-green-300/10 to-green-700/10 animate-grass-wave"></div>
+
+                                    {/* Stadium atmosphere particles */}
+                                    <div className="absolute top-1 left-3 w-0.5 h-0.5 bg-yellow-200/60 pixelated animate-cheer-particle"></div>
+                                    <div className="absolute top-2 right-2 w-0.5 h-0.5 bg-blue-200/60 pixelated animate-cheer-particle delay-500"></div>
+                                    <div className="absolute bottom-1 left-1 w-0.5 h-0.5 bg-red-200/60 pixelated animate-cheer-particle delay-1000"></div>
                                 </div>
                             </div>
                             <h2 className="text-minecraft-lg font-minecraft text-white mb-2">
@@ -114,37 +199,99 @@ export default function Home() {
                     </div>
 
                     {/* Game Environment */}
-                    <div className="minecraft-panel">
+                    <div className="minecraft-panel relative">
+                        <img
+                            src="/mnemocyte.png"
+                            alt=""
+                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
+                        />
                         <div className="text-center mb-4">
                             <div className="w-16 h-16 mx-auto mb-3 relative overflow-hidden">
-                                {/* FPS Cave/Dungeon view background */}
-                                <div className="w-full h-full bg-gradient-to-b from-gray-800 to-gray-900 border-minecraft-thick border-minecraft-cobblestone pixelated relative">
-                                    {/* Cave walls perspective */}
-                                    <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-r from-gray-700 to-gray-600 pixelated"></div>
-                                    <div className="absolute top-0 right-0 w-2 h-full bg-gradient-to-l from-gray-700 to-gray-600 pixelated"></div>
-                                    {/* Floor perspective */}
-                                    <div className="absolute bottom-0 left-2 right-2 h-4 bg-gradient-to-t from-gray-600 to-gray-500 pixelated"></div>
-                                    {/* Distant light/exit */}
-                                    <div className="absolute top-6 left-1/2 w-4 h-2 bg-yellow-300 pixelated transform -translate-x-1/2 animate-pulse duration-2000"></div>
-                                    {/* Crosshair - more prominent and realistic */}
-                                    <div className="absolute top-1/2 left-1/2 w-6 h-px bg-red-500 pixelated transform -translate-x-1/2 -translate-y-0.5 animate-crosshair"></div>
-                                    <div className="absolute top-1/2 left-1/2 w-px h-6 bg-red-500 pixelated transform -translate-x-0.5 -translate-y-1/2 animate-crosshair"></div>
-                                    {/* Crosshair center dot */}
-                                    <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-red-600 pixelated transform -translate-x-0.5 -translate-y-0.5 animate-pulse"></div>
-                                    {/* Crosshair outer ring */}
-                                    <div className="absolute top-1/2 left-1/2 w-8 h-px bg-red-400/50 pixelated transform -translate-x-1/2 -translate-y-0.5"></div>
-                                    <div className="absolute top-1/2 left-1/2 w-px h-8 bg-red-400/50 pixelated transform -translate-x-0.5 -translate-y-1/2"></div>
-                                    {/* Moving enemies/NPCs in distance */}
-                                    <div className="absolute top-8 left-7 w-1 h-2 bg-red-500 pixelated animate-fps-sway"></div>
-                                    <div className="absolute top-9 right-8 w-1 h-1.5 bg-green-500 pixelated animate-fps-sway delay-1000"></div>
-                                    <div className="absolute top-7 left-9 w-0.5 h-1 bg-purple-500 pixelated animate-fps-sway delay-500"></div>
-                                    {/* Muzzle flash effect */}
-                                    <div className="absolute bottom-4 right-3 w-2 h-1 bg-yellow-400 pixelated animate-ping duration-4000"></div>
-                                    {/* Walking/breathing effect for entire view */}
-                                    <div className="absolute inset-0 animate-fps-sway duration-2000"></div>
-                                    {/* Health/UI elements */}
-                                    <div className="absolute bottom-1 left-1 w-6 h-1 bg-red-600 pixelated"></div>
-                                    <div className="absolute bottom-1 right-1 w-4 h-1 bg-blue-500 pixelated"></div>
+                                {/* Space background */}
+                                <div className="w-full h-full bg-gradient-to-br from-indigo-900 via-purple-900 to-black border-minecraft-thick border-gray-700 pixelated relative">
+                                    {/* Stars */}
+                                    <div className="absolute top-1 left-2 w-0.5 h-0.5 bg-white pixelated animate-twinkle"></div>
+                                    <div className="absolute top-3 right-3 w-0.5 h-0.5 bg-white pixelated animate-twinkle delay-500"></div>
+                                    <div className="absolute top-2 right-6 w-0.5 h-0.5 bg-white pixelated animate-twinkle delay-1000"></div>
+                                    <div className="absolute bottom-2 left-4 w-0.5 h-0.5 bg-white pixelated animate-twinkle delay-1500"></div>
+                                    <div className="absolute bottom-4 right-2 w-0.5 h-0.5 bg-white pixelated animate-twinkle delay-300"></div>
+
+                                    {/* Fast Spinning 3D Earth Globe */}
+                                    <div className="absolute top-1/2 left-1/2 w-12 h-12 transform -translate-x-1/2 -translate-y-1/2">
+                                        {/* Earth base - blue ocean sphere */}
+                                        <div className="w-full h-full bg-gradient-radial from-blue-400 via-blue-500 to-blue-600 rounded-full pixelated relative overflow-hidden border border-blue-700/50">
+                                            {/* 3D Globe surface with moving continents */}
+
+                                            {/* Northern hemisphere continents - scrolling horizontally */}
+                                            <div className="absolute top-1 left-0 w-full h-2 overflow-hidden">
+                                                <div className="animate-continent-scroll-north">
+                                                    <div className="flex absolute top-0 left-0 w-96">
+                                                        <div className="w-4 h-2 bg-green-600 pixelated rounded-sm mr-2 flex-shrink-0"></div>
+                                                        <div className="w-3 h-1.5 bg-green-500 pixelated rounded-sm mr-3 flex-shrink-0"></div>
+                                                        <div className="w-2 h-2 bg-green-700 pixelated rounded-sm mr-4 flex-shrink-0"></div>
+                                                        <div className="w-5 h-1.5 bg-green-600 pixelated rounded-sm mr-2 flex-shrink-0"></div>
+                                                        <div className="w-3 h-2 bg-green-500 pixelated rounded-sm mr-3 flex-shrink-0"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Equatorial continents - scrolling faster */}
+                                            <div className="absolute top-4 left-0 w-full h-3 overflow-hidden">
+                                                <div className="animate-continent-scroll-equator">
+                                                    <div className="flex absolute top-0 left-0 w-96">
+                                                        <div className="w-6 h-3 bg-green-600 pixelated rounded-sm mr-1 flex-shrink-0"></div>
+                                                        <div className="w-2 h-2.5 bg-green-700 pixelated rounded-sm mr-2 flex-shrink-0"></div>
+                                                        <div className="w-4 h-3 bg-green-500 pixelated rounded-sm mr-3 flex-shrink-0"></div>
+                                                        <div className="w-7 h-2.5 bg-green-600 pixelated rounded-sm mr-1 flex-shrink-0"></div>
+                                                        <div className="w-3 h-3 bg-green-700 pixelated rounded-sm mr-2 flex-shrink-0"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Southern hemisphere continents - scrolling reverse */}
+                                            <div className="absolute bottom-1 left-0 w-full h-2.5 overflow-hidden">
+                                                <div className="animate-continent-scroll-south">
+                                                    <div className="flex absolute top-0 left-0 w-96">
+                                                        <div className="w-3 h-2.5 bg-green-700 pixelated rounded-sm mr-3 flex-shrink-0"></div>
+                                                        <div className="w-5 h-2 bg-green-600 pixelated rounded-sm mr-2 flex-shrink-0"></div>
+                                                        <div className="w-2 h-2.5 bg-green-500 pixelated rounded-sm mr-4 flex-shrink-0"></div>
+                                                        <div className="w-4 h-2 bg-green-700 pixelated rounded-sm mr-2 flex-shrink-0"></div>
+                                                        <div className="w-6 h-2.5 bg-green-600 pixelated rounded-sm mr-1 flex-shrink-0"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* 3D Globe lighting effect - simulates sphere curvature */}
+                                            <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/20 rounded-full pointer-events-none"></div>
+                                            <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/20 rounded-full pointer-events-none"></div>
+
+                                            {/* Moving highlight - sun reflection */}
+                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-globe-shine-fast rounded-full pointer-events-none"></div>
+
+                                            {/* Atmosphere glow */}
+                                            <div className="absolute -inset-0.5 bg-blue-300/20 rounded-full animate-pulse duration-3000 pointer-events-none"></div>
+
+                                            {/* Dynamic cloud layer */}
+                                            <div className="absolute top-2 left-0 w-full h-8 overflow-hidden opacity-60">
+                                                <div className="animate-cloud-scroll">
+                                                    <div className="flex absolute top-0 left-0 w-96">
+                                                        <div className="w-3 h-1 bg-white/80 pixelated rounded-full mr-4 flex-shrink-0"></div>
+                                                        <div className="w-2 h-0.5 bg-white/60 pixelated rounded-full mr-6 flex-shrink-0"></div>
+                                                        <div className="w-4 h-1 bg-white/70 pixelated rounded-full mr-3 flex-shrink-0"></div>
+                                                        <div className="w-2.5 h-0.5 bg-white/80 pixelated rounded-full mr-5 flex-shrink-0"></div>
+                                                        <div className="w-3.5 h-1 bg-white/60 pixelated rounded-full mr-3 flex-shrink-0"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Orbital ring */}
+                                    <div className="absolute top-1/2 left-1/2 w-14 h-14 border border-gray-400/30 rounded-full pixelated transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow"></div>
+
+                                    {/* Distant planets */}
+                                    <div className="absolute top-2 left-12 w-1 h-1 bg-red-400 rounded-full pixelated"></div>
+                                    <div className="absolute bottom-3 right-1 w-0.5 h-0.5 bg-orange-400 rounded-full pixelated"></div>
                                 </div>
                             </div>
                             <h2 className="text-minecraft-lg font-minecraft text-white mb-2">
@@ -164,7 +311,12 @@ export default function Home() {
 
                 {/* Character Library Section */}
                 <div className="mt-6">
-                    <div className="minecraft-panel">
+                    <div className="minecraft-panel relative">
+                        <img
+                            src="/mnemocyte.png"
+                            alt=""
+                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
+                        />
                         <div className="text-center">
                             <h3 className="text-minecraft font-minecraft text-white mb-3">
                                 📚 Character Library

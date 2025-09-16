@@ -503,30 +503,38 @@ export default function GameWorld() {
     return (
         <main className="min-h-screen bg-gradient-to-b from-minecraft-dark-sky to-minecraft-dark-grass p-4">
             <div className="container mx-auto max-w-7xl">
-                {/* Header */}
+                {/* Header with Logo */}
                 <div className="minecraft-panel mb-4 text-center">
-                    <div className="flex items-center justify-between">
-                        <MinecraftButton
-                            onClick={() => window.location.href = '/'}
-                            className="text-minecraft-xs"
-                        >
-                            ← Back to Home
-                        </MinecraftButton>
-                        <div>
-                            <h1 className="text-3xl font-minecraft text-white mb-1">
-                                GAME WORLD
-                            </h1>
-                            <p className="text-minecraft-sm text-gray-300">
-                                Multi-Character Interactive Environment
-                            </p>
-                        </div>
-                        <MinecraftButton
-                            onClick={() => window.location.href = '/data'}
-                            className="text-minecraft-xs"
-                        >
-                            Export Data →
-                        </MinecraftButton>
+                    <div className="flex justify-center mb-4">
+                        <img
+                            src="/mnemocyte.png"
+                            alt="Mnemocyte Logo"
+                            className="h-16 pixelated"
+                            style={{ width: 'auto' }}
+                        />
                     </div>
+                    <h1 className="text-2xl font-minecraft text-white mb-2">
+                        GAME WORLD
+                    </h1>
+                    <p className="text-minecraft-sm text-gray-300">
+                        Multi-Character Interactive Environment
+                    </p>
+                </div>
+
+                {/* Navigation */}
+                <div className="flex justify-between mb-4">
+                    <MinecraftButton
+                        onClick={() => window.location.href = '/'}
+                        className="text-minecraft-xs"
+                    >
+                        ← Back to Home
+                    </MinecraftButton>
+                    <MinecraftButton
+                        onClick={() => window.location.href = '/data'}
+                        className="text-minecraft-xs"
+                    >
+                        Export Data →
+                    </MinecraftButton>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">

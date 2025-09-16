@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: mnemocyte-postgres
+    environment:
+      POSTGRES_DB: mnemocyte
+      POSTGRES_USER: mnemocyte_user
+      POSTGRES_PASSWORD: mnemocyte_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./prisma/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - mnemocyte-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U mnemocyte_user -d mnemocyte" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Next.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mnemocyte-app
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://mnemocyte_user:mnemocyte_password@postgres:5432/mnemocyte
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION}
+      - AZURE_OPENAI_DEPLOYMENT_NAME=${AZURE_OPENAI_DEPLOYMENT_NAME}
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - mnemocyte-network
+    volumes:
+      - ./characters.json:/app/characters.json:ro
+      - ./sessions.json:/app/sessions.json:ro
+
+  # Redis for caching (optional but recommended for production)
+  redis:
+    image: redis:7-alpine
+    container_name: mnemocyte-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - mnemocyte-network
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
+
+
+networks:
+  mnemocyte-network:
+    driver: bridge

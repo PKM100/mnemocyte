@@ -243,42 +243,52 @@ export default function Playground() {
     return (
         <main className="min-h-screen bg-gradient-to-b from-minecraft-sky to-minecraft-grass p-4">
             <div className="container mx-auto max-w-6xl">
-                {/* Header */}
+                {/* Header with Logo */}
                 <div className="minecraft-panel mb-6 text-center">
+                    <div className="flex justify-center mb-4">
+                        <img
+                            src="/mnemocyte.png"
+                            alt="Mnemocyte Logo"
+                            className="h-16 pixelated"
+                            style={{ width: 'auto' }}
+                        />
+                    </div>
                     <h1 className="text-2xl font-minecraft text-white mb-2">
-                        🎮 FOXP2 Neural Playground
+                        NEURAL PLAYGROUND
                     </h1>
-                    <p className="text-minecraft-xs text-gray-300 mb-4">
+                    <p className="text-minecraft-xs text-gray-300">
                         Interactive AI conversations with your NPCs
                     </p>
-                    <div className="flex gap-4 justify-center flex-wrap">
-                        <Link href="/creator">
-                            <MinecraftButton size="sm">➕ Create Character</MinecraftButton>
-                        </Link>
-                        <Link href="/characters">
-                            <MinecraftButton size="sm" variant="secondary">📚 Character Library</MinecraftButton>
-                        </Link>
-                        {selectedCharacter && (
-                            <MinecraftButton
-                                size="sm"
-                                variant="danger"
-                                onClick={() => {
-                                    setMessages([{
-                                        id: 'welcome',
-                                        sender: 'npc',
-                                        message: generateWelcomeMessage(selectedCharacter),
-                                        timestamp: new Date(),
-                                        emotion: 'neutral'
-                                    }]);
-                                }}
-                            >
-                                🔄 Reset Chat
-                            </MinecraftButton>
-                        )}
-                        <Link href="/">
-                            <MinecraftButton size="sm" variant="secondary">🏠 Home</MinecraftButton>
-                        </Link>
-                    </div>
+                </div>
+
+                {/* Navigation */}
+                <div className="flex gap-4 justify-center flex-wrap mb-6">
+                    <Link href="/creator">
+                        <MinecraftButton size="sm">➕ Create Character</MinecraftButton>
+                    </Link>
+                    <Link href="/characters">
+                        <MinecraftButton size="sm" variant="secondary">📚 Character Library</MinecraftButton>
+                    </Link>
+                    {selectedCharacter && (
+                        <MinecraftButton
+                            size="sm"
+                            variant="danger"
+                            onClick={() => {
+                                setMessages([{
+                                    id: 'welcome',
+                                    sender: 'npc',
+                                    message: generateWelcomeMessage(selectedCharacter),
+                                    timestamp: new Date(),
+                                    emotion: 'neutral'
+                                }]);
+                            }}
+                        >
+                            🔄 Reset Chat
+                        </MinecraftButton>
+                    )}
+                    <Link href="/">
+                        <MinecraftButton size="sm" variant="secondary">🏠 Home</MinecraftButton>
+                    </Link>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

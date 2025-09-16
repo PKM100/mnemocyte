@@ -27,6 +27,13 @@ yarn-error.log*
 .env*.local
 .env
 
+# Database
+/prisma/migrations
+/generated
+
+# Docker
+docker-compose.override.yml
+
 # Vercel
 .vercel
 
@@ -41,3 +48,9 @@ next-env.d.ts
 # Logs
 logs
 *.log
+
+# Logs
+logs
+*.log
+
+/generated/prisma

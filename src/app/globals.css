@@ -112,23 +112,251 @@ body {
         animation: build-character 0.8s ease-out forwards;
     }
 
-    /* Soccer ball rolling animation */
-    @keyframes roll-ball {
+    /* Enhanced soccer ball movement - curved path */
+    @keyframes enhanced-ball-movement {
         0% {
-            transform: translateX(0) rotate(0deg);
+            transform: translate(0, 0);
+        }
+
+        25% {
+            transform: translate(12px, -4px);
         }
 
         50% {
-            transform: translateX(8px) rotate(180deg);
+            transform: translate(8px, 8px);
+        }
+
+        75% {
+            transform: translate(20px, 4px);
         }
 
         100% {
-            transform: translateX(16px) rotate(360deg);
+            transform: translate(0, 0);
         }
     }
 
-    .animate-roll {
-        animation: roll-ball 3s ease-in-out infinite;
+    .animate-enhanced-ball-movement {
+        animation: enhanced-ball-movement 4s ease-in-out infinite;
+    }
+
+    /* Ball spinning animation */
+    @keyframes ball-spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .animate-ball-spin {
+        animation: ball-spin 1s linear infinite;
+    }
+
+    /* Ball shadow following */
+    @keyframes shadow-follow {
+        0% {
+            transform: translate(0, 0) scale(1);
+            opacity: 0.3;
+        }
+
+        25% {
+            transform: translate(2px, 1px) scale(0.8);
+            opacity: 0.4;
+        }
+
+        50% {
+            transform: translate(0, -2px) scale(0.6);
+            opacity: 0.2;
+        }
+
+        75% {
+            transform: translate(3px, 0) scale(0.9);
+            opacity: 0.3;
+        }
+
+        100% {
+            transform: translate(0, 0) scale(1);
+            opacity: 0.3;
+        }
+    }
+
+    .animate-shadow-follow {
+        animation: shadow-follow 4s ease-in-out infinite;
+    }
+
+    /* Ball trail effect */
+    @keyframes ball-trail {
+        0% {
+            opacity: 0.6;
+            transform: translateX(0) scale(1);
+        }
+
+        50% {
+            opacity: 0.2;
+            transform: translateX(-4px) scale(0.7);
+        }
+
+        100% {
+            opacity: 0;
+            transform: translateX(-8px) scale(0.4);
+        }
+    }
+
+    .animate-ball-trail {
+        animation: ball-trail 0.8s ease-out infinite;
+    }
+
+    /* Player chase animation */
+    @keyframes player-chase {
+        0% {
+            transform: translate(0, 0);
+        }
+
+        25% {
+            transform: translate(8px, -2px);
+        }
+
+        50% {
+            transform: translate(4px, 6px);
+        }
+
+        75% {
+            transform: translate(12px, 2px);
+        }
+
+        100% {
+            transform: translate(0, 0);
+        }
+    }
+
+    .animate-player-chase {
+        animation: player-chase 4s ease-in-out infinite;
+    }
+
+    /* Player defend animation */
+    @keyframes player-defend {
+        0% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+            transform: translate(-2px, -1px) scale(1.05);
+        }
+
+        100% {
+            transform: translate(0, 0) scale(1);
+        }
+    }
+
+    .animate-player-defend {
+        animation: player-defend 2s ease-in-out infinite;
+    }
+
+    /* Player support animation */
+    @keyframes player-support {
+        0% {
+            transform: translate(0, 0);
+        }
+
+        33% {
+            transform: translate(-3px, 2px);
+        }
+
+        66% {
+            transform: translate(2px, -1px);
+        }
+
+        100% {
+            transform: translate(0, 0);
+        }
+    }
+
+    .animate-player-support {
+        animation: player-support 3s ease-in-out infinite;
+    }
+
+    /* Arm swinging animation */
+    @keyframes arm-swing {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        50% {
+            transform: rotate(20deg);
+        }
+
+        100% {
+            transform: rotate(0deg);
+        }
+    }
+
+    .animate-arm-swing {
+        animation: arm-swing 0.6s ease-in-out infinite;
+    }
+
+    /* Leg running animation */
+    @keyframes leg-run {
+        0% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-1px);
+        }
+
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    .animate-leg-run {
+        animation: leg-run 0.4s ease-in-out infinite;
+    }
+
+    /* Grass wave animation */
+    @keyframes grass-wave {
+        0% {
+            opacity: 0.1;
+            transform: translateX(0);
+        }
+
+        50% {
+            opacity: 0.2;
+            transform: translateX(2px);
+        }
+
+        100% {
+            opacity: 0.1;
+            transform: translateX(0);
+        }
+    }
+
+    .animate-grass-wave {
+        animation: grass-wave 4s ease-in-out infinite;
+    }
+
+    /* Cheer particle animation */
+    @keyframes cheer-particle {
+        0% {
+            opacity: 0;
+            transform: translateY(0) scale(0.5);
+        }
+
+        50% {
+            opacity: 1;
+            transform: translateY(-4px) scale(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: translateY(-8px) scale(0.3);
+        }
+    }
+
+    .animate-cheer-particle {
+        animation: cheer-particle 2s ease-out infinite;
     }
 
     /* FPS walking animation */
@@ -195,5 +423,151 @@ body {
 
     .animate-build {
         animation: build-character 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    }
+
+    /* 3D Globe continent scrolling animations - simulates fast rotation */
+    @keyframes continent-scroll-north {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    .animate-continent-scroll-north {
+        animation: continent-scroll-north 2s linear infinite;
+    }
+
+    @keyframes continent-scroll-equator {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    .animate-continent-scroll-equator {
+        animation: continent-scroll-equator 1.5s linear infinite;
+    }
+
+    @keyframes continent-scroll-south {
+        0% {
+            transform: translateX(-50%);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    .animate-continent-scroll-south {
+        animation: continent-scroll-south 2.2s linear infinite;
+    }
+
+    /* Fast cloud scrolling */
+    @keyframes cloud-scroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    .animate-cloud-scroll {
+        animation: cloud-scroll 3s linear infinite;
+    }
+
+    /* Fast globe shine effect */
+    @keyframes globe-shine-fast {
+        0% {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+
+        20% {
+            opacity: 0.8;
+        }
+
+        80% {
+            opacity: 0.8;
+        }
+
+        100% {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+
+    .animate-globe-shine-fast {
+        animation: globe-shine-fast 2s ease-in-out infinite;
+    }
+
+    /* Enhanced globe shine effect - legacy support */
+    @keyframes globe-shine {
+        0% {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+
+    .animate-globe-shine {
+        animation: globe-shine 4s ease-in-out infinite;
+    }
+
+    /* Custom radial gradient for 3D sphere effect */
+    .bg-gradient-radial {
+        background: radial-gradient(circle, var(--tw-gradient-stops));
+    }
+
+    /* Cloud drifting */
+    @keyframes cloud-drift {
+        0% {
+            transform: translateX(0);
+            opacity: 0.7;
+        }
+
+        50% {
+            transform: translateX(2px);
+            opacity: 0.9;
+        }
+
+        100% {
+            transform: translateX(0);
+            opacity: 0.7;
+        }
+    }
+
+    .animate-cloud-drift {
+        animation: cloud-drift 6s ease-in-out infinite;
+    }
+
+    /* Slow spin for orbital ring */
+    @keyframes spin-slow {
+        0% {
+            transform: translate(-50%, -50%) rotate(0deg);
+        }
+
+        100% {
+            transform: translate(-50%, -50%) rotate(360deg);
+        }
+    }
+
+    .animate-spin-slow {
+        animation: spin-slow 20s linear infinite;
     }
 }
