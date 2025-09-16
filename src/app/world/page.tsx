@@ -522,18 +522,12 @@ export default function GameWorld() {
                 </div>
 
                 {/* Navigation */}
-                <div className="flex justify-between mb-4">
+                <div className="flex justify-center mb-4">
                     <MinecraftButton
                         onClick={() => window.location.href = '/'}
                         className="text-minecraft-xs"
                     >
                         ← Back to Home
-                    </MinecraftButton>
-                    <MinecraftButton
-                        onClick={() => window.location.href = '/data'}
-                        className="text-minecraft-xs"
-                    >
-                        Export Data →
                     </MinecraftButton>
                 </div>
 

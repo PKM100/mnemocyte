@@ -307,6 +307,104 @@ export default function Home() {
                             </a>
                         </div>
                     </div>
+                    {/* API Documentation */}
+                    <div className="minecraft-panel relative">
+                        <img
+                            src="/mnemocyte.png"
+                            alt=""
+                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
+                        />
+                        <div className="text-center mb-4">
+                            <div className="w-16 h-16 mx-auto mb-3 relative overflow-hidden">
+                                {/* API/Code background */}
+                                <div className="w-full h-full bg-gradient-to-br from-gray-800 via-gray-900 to-black border-minecraft-thick border-gray-600 pixelated relative">
+                                    {/* Code lines */}
+                                    <div className="absolute top-1 left-1 right-1 h-0.5 bg-green-400 pixelated"></div>
+                                    <div className="absolute top-2.5 left-1 w-8 h-0.5 bg-blue-400 pixelated"></div>
+                                    <div className="absolute top-4 left-2 w-6 h-0.5 bg-yellow-400 pixelated"></div>
+                                    <div className="absolute top-5.5 left-1 w-10 h-0.5 bg-green-400 pixelated"></div>
+                                    <div className="absolute top-7 left-2 w-4 h-0.5 bg-purple-400 pixelated"></div>
+                                    <div className="absolute top-8.5 left-1 w-7 h-0.5 bg-blue-400 pixelated"></div>
+                                    <div className="absolute top-10 left-2 w-5 h-0.5 bg-red-400 pixelated"></div>
+                                    <div className="absolute top-11.5 left-1 w-9 h-0.5 bg-yellow-400 pixelated"></div>
+                                    <div className="absolute top-13 left-1 right-1 h-0.5 bg-green-400 pixelated"></div>
+
+                                    {/* API symbol */}
+                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <div className="w-6 h-6 border-2 border-white pixelated rounded flex items-center justify-center">
+                                            <span className="text-white text-xs font-bold">API</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Blinking cursor */}
+                                    <div className="absolute bottom-2 right-2 w-0.5 h-2 bg-white pixelated animate-blink"></div>
+                                </div>
+                            </div>
+                            <h2 className="text-minecraft-lg font-minecraft text-white mb-2">
+                                API Docs
+                            </h2>
+                            <p className="text-minecraft-xs text-gray-300 mb-4">
+                                Complete REST API documentation with interactive testing suite
+                            </p>
+                            <a href="/docs">
+                                <button className="minecraft-button w-full">
+                                    View API Docs
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Data Export & Fine-tuning */}
+                    <div className="minecraft-panel relative">
+                        <img
+                            src="/mnemocyte.png"
+                            alt=""
+                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
+                        />
+                        <div className="text-center mb-4">
+                            <div className="w-16 h-16 mx-auto mb-3 relative overflow-hidden">
+                                {/* Data/Database background */}
+                                <div className="w-full h-full bg-gradient-to-br from-orange-800 via-amber-900 to-yellow-900 border-minecraft-thick border-orange-600 pixelated relative">
+                                    {/* Database layers */}
+                                    <div className="absolute top-2 left-2 right-2 h-1 bg-orange-400 pixelated rounded-sm"></div>
+                                    <div className="absolute top-4 left-2 right-2 h-1 bg-amber-400 pixelated rounded-sm"></div>
+                                    <div className="absolute top-6 left-2 right-2 h-1 bg-yellow-400 pixelated rounded-sm"></div>
+                                    <div className="absolute top-8 left-2 right-2 h-1 bg-orange-400 pixelated rounded-sm"></div>
+                                    <div className="absolute top-10 left-2 right-2 h-1 bg-amber-400 pixelated rounded-sm"></div>
+                                    <div className="absolute top-12 left-2 right-2 h-1 bg-yellow-400 pixelated rounded-sm"></div>
+
+                                    {/* Export arrows */}
+                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <div className="w-6 h-6 relative">
+                                            {/* Arrow pointing right */}
+                                            <div className="absolute top-2 left-1 w-3 h-0.5 bg-white pixelated"></div>
+                                            <div className="absolute top-1.5 right-1 w-1 h-1 bg-white pixelated transform rotate-45"></div>
+                                            <div className="absolute top-2.5 right-1 w-1 h-1 bg-white pixelated transform -rotate-45"></div>
+                                        </div>
+                                    </div>
+
+                                    {/* Data points animation */}
+                                    <div className="absolute top-3 right-1 w-1 h-1 bg-white pixelated animate-pulse"></div>
+                                    <div className="absolute top-7 left-1 w-1 h-1 bg-white pixelated animate-pulse delay-500"></div>
+                                    <div className="absolute bottom-3 right-3 w-1 h-1 bg-white pixelated animate-pulse delay-1000"></div>
+
+                                    {/* Glow effect */}
+                                    <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-transparent animate-pulse duration-2000"></div>
+                                </div>
+                            </div>
+                            <h2 className="text-minecraft-lg font-minecraft text-white mb-2">
+                                Data Export
+                            </h2>
+                            <p className="text-minecraft-xs text-gray-300 mb-4">
+                                Export conversation data for AI model fine-tuning and analysis
+                            </p>
+                            <a href="/data">
+                                <button className="minecraft-button w-full">
+                                    Export Data
+                                </button>
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Character Library Section */}

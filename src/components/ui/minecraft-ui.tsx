@@ -63,6 +63,38 @@ export function MinecraftPanel({ children, className, title }: MinecraftPanelPro
     );
 }
 
+interface MinecraftCardProps {
+    children: React.ReactNode;
+    className?: string;
+    title?: string;
+}
+
+export function MinecraftCard({ children, className, title }: MinecraftCardProps) {
+    return (
+        <div className={cn('minecraft-panel bg-gray-800 border-4 border-gray-600 border-t-gray-400 border-l-gray-400 border-r-gray-900 border-b-gray-900 p-4', className)}>
+            {title && (
+                <div className="mb-4 pb-2 border-b-2 border-gray-500">
+                    <h3 className="font-minecraft text-minecraft text-white">{title}</h3>
+                </div>
+            )}
+            {children}
+        </div>
+    );
+}
+
+interface MinecraftContainerProps {
+    children: React.ReactNode;
+    className?: string;
+}
+
+export function MinecraftContainer({ children, className }: MinecraftContainerProps) {
+    return (
+        <div className={cn('min-h-screen bg-gradient-to-b from-minecraft-sky to-minecraft-grass p-6', className)}>
+            {children}
+        </div>
+    );
+}
+
 interface MinecraftInputProps extends React.InputHTMLAttributes<HTMLInputElement> { }
 
 export function MinecraftInput({ className, ...props }: MinecraftInputProps) {

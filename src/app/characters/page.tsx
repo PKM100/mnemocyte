@@ -22,11 +22,19 @@ export default function CharactersList() {
             const response = await fetch('/api/characters');
             if (response.ok) {
                 const apiCharacters = await response.json();
-                setCharacters(apiCharacters);
+                // Filter out test characters
+                const filteredCharacters = apiCharacters.filter((char: NPCCharacter) =>
+                    !char.name.toLowerCase().includes('test')
+                );
+                setCharacters(filteredCharacters);
             } else {
                 // Fallback to localStorage
                 const localChars = JSON.parse(localStorage.getItem('mnemocyte-characters') || '[]');
-                setCharacters(localChars);
+                // Filter out test characters from localStorage as well
+                const filteredLocalChars = localChars.filter((char: NPCCharacter) =>
+                    !char.name.toLowerCase().includes('test')
+                );
+                setCharacters(filteredLocalChars);
             }
         } catch (err) {
             console.error('Error loading characters:', err);
@@ -35,7 +43,11 @@ export default function CharactersList() {
             // Fallback to localStorage
             try {
                 const localChars = JSON.parse(localStorage.getItem('mnemocyte-characters') || '[]');
-                setCharacters(localChars);
+                // Filter out test characters from localStorage as well
+                const filteredLocalChars = localChars.filter((char: NPCCharacter) =>
+                    !char.name.toLowerCase().includes('test')
+                );
+                setCharacters(filteredLocalChars);
             } catch (localErr) {
                 console.error('Error loading from localStorage:', localErr);
             }

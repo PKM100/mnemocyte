@@ -1,0 +1,114 @@
+{
+  "passed": 11,
+  "failed": 0,
+  "total": 11,
+  "tests": [
+    {
+      "name": "GET /api/characters",
+      "success": true,
+      "duration": 15,
+      "details": {
+        "count": 4
+      }
+    },
+    {
+      "name": "POST /api/characters",
+      "success": true,
+      "duration": 13,
+      "details": {
+        "characterId": "cmfn2p12k00294cyh9m0emi5y",
+        "name": "Test Character API",
+        "role": "API Tester"
+      }
+    },
+    {
+      "name": "GET /api/characters/{id}",
+      "success": true,
+      "duration": 104,
+      "details": {
+        "characterId": "cmfn2p12k00294cyh9m0emi5y",
+        "name": "Test Character API",
+        "conversationCount": 0
+      }
+    },
+    {
+      "name": "PUT /api/characters/{id}",
+      "success": true,
+      "duration": 14,
+      "details": {
+        "characterId": "cmfn2p12k00294cyh9m0emi5y",
+        "newName": "Updated Test Character",
+        "newMood": 0.85
+      }
+    },
+    {
+      "name": "POST /api/characters/{id}/chat",
+      "success": true,
+      "duration": 125,
+      "details": {
+        "conversationId": "cmfn2p197002a4cyhis1l0qvn",
+        "characterResponse": "That reminds me of something! As Updated Test Char..."
+      }
+    },
+    {
+      "name": "GET /api/characters/{id}/chat",
+      "success": true,
+      "duration": 10,
+      "details": {
+        "messageCount": 2,
+        "hasMore": false
+      }
+    },
+    {
+      "name": "GET /api/characters/{id}/status",
+      "success": true,
+      "duration": 124,
+      "details": {
+        "status": "in_conversation",
+        "activity": "socializing",
+        "mood": "high"
+      }
+    },
+    {
+      "name": "GET /api/characters/status",
+      "success": true,
+      "duration": 115,
+      "details": {
+        "totalCharacters": 5,
+        "activeCharacters": 5,
+        "averageMood": 0.5240958538291653
+      }
+    },
+    {
+      "name": "POST /api/rooms",
+      "success": true,
+      "duration": 30,
+      "details": {
+        "roomId": "cmfn2p1h2002i4cyhg233b931",
+        "name": "API Test Room",
+        "participantCount": 2
+      }
+    },
+    {
+      "name": "GET /api/rooms",
+      "success": true,
+      "duration": 6,
+      "details": {
+        "roomCount": 2,
+        "hasMore": false
+      }
+    },
+    {
+      "name": "POST /api/rooms/{id}/chat",
+      "success": true,
+      "duration": 134,
+      "details": {
+        "roomId": "cmfn2p1h2002i4cyhg233b931",
+        "messageId": "cmfn2p1kw002p4cyhtwlh0n4f",
+        "characterResponses": 1
+      }
+    }
+  ],
+  "timestamp": "2025-09-16T21:36:35.052Z",
+  "baseUrl": "http://localhost:3000/api"
+}

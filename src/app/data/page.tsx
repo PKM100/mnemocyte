@@ -12,18 +12,28 @@ interface ChatMessage {
     sessionId: string;
 }
 
-interface Session {
+interface Conversation {
     id: string;
-    startTime: Date;
-    endTime?: Date;
-    messages: ChatMessage[];
-    activeCharacters: string[];
-    userCommands: Array<{
-        timestamp: Date;
-        command: string;
-        target?: string;
-        result: string;
+    title: string;
+    type: string;
+    createdAt: string;
+    updatedAt: string;
+    isActive: boolean;
+    messages: Array<{
+        id: string;
+        content: string;
+        characterId: string | null;
+        timestamp: string;
+        character: Character | null;
+        messageOrder: number;
     }>;
+    participants: Array<{
+        characterId: string;
+        character: Character;
+    }>;
+    _count: {
+        messages: number;
+    };
 }
 
 interface Character {
@@ -34,18 +44,18 @@ interface Character {
 }
 
 export default function DataExport() {
-    const [sessions, setSessions] = useState<Session[]>([]);
+    const [conversations, setConversations] = useState<Conversation[]>([]);
     const [characters, setCharacters] = useState<Character[]>([]);
-    const [selectedSessions, setSelectedSessions] = useState<string[]>([]);
+    const [selectedConversations, setSelectedConversations] = useState<string[]>([]);
     const [selectedCharacters, setSelectedCharacters] = useState<string[]>([]);
     const [exportFormat, setExportFormat] = useState<'jsonl' | 'csv' | 'json'>('jsonl');
     const [exportType, setExportType] = useState<'conversations' | 'characters' | 'both'>('conversations');
     const [isLoading, setIsLoading] = useState(false);
     const [stats, setStats] = useState({
-        totalSessions: 0,
+        totalConversations: 0,
         totalMessages: 0,
         totalCharacters: 0,
-        averageMessagesPerSession: 0,
+        averageMessagesPerConversation: 0,
         characterInteractions: {} as Record<string, number>
     });
 
@@ -55,87 +65,66 @@ export default function DataExport() {
 
     useEffect(() => {
         calculateStats();
-    }, [sessions, characters]);
+    }, [conversations, characters]);
 
     const loadData = async () => {
         try {
-            const [sessionsResponse, charactersResponse] = await Promise.all([
-                fetch('/api/sessions'),
+            setIsLoading(true);
+            const [conversationsResponse, charactersResponse] = await Promise.all([
+                fetch('/api/conversations'),
                 fetch('/api/characters')
             ]);
 
-            const sessionsData = await sessionsResponse.json();
+            if (!conversationsResponse.ok || !charactersResponse.ok) {
+                throw new Error('Failed to fetch data');
+            }
+
+            const conversationsData = await conversationsResponse.json();
             const charactersData = await charactersResponse.json();
 
-            // Convert date strings back to Date objects
-            const parsedSessions = sessionsData.map((session: any) => ({
-                ...session,
-                startTime: new Date(session.startTime),
-                endTime: session.endTime ? new Date(session.endTime) : undefined,
-                messages: session.messages.map((msg: any) => ({
-                    ...msg,
-                    timestamp: new Date(msg.timestamp)
-                }))
-            }));
-
-            setSessions(parsedSessions);
+            setConversations(conversationsData);
             setCharacters(charactersData);
         } catch (error) {
             console.error('Failed to load data:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const calculateStats = () => {
         let totalMessages = 0;
-        let totalConversationMessages = 0; // Exclude system messages
         const characterInteractions: Record<string, number> = {};
 
-        sessions.forEach(session => {
-            session.messages.forEach(message => {
-                totalMessages++;
+        conversations.forEach(conversation => {
+            // Use the message count from the API response
+            const messageCount = conversation._count?.messages || 0;
+            totalMessages += messageCount;
 
-                // Count actual conversation messages (exclude system spawn/despawn messages)
-                if (message.sender !== 'System' && !(
-                    message.message.startsWith('*') && (
-                        message.message.includes('joins the conversation') ||
-                        message.message.includes('leaves the world') ||
-                        message.message.includes('appears in the world') ||
-                        message.message.includes('wanders off')
-                    )
-                )) {
-                    totalConversationMessages++;
-                }
-
-                if (message.characterId && message.sender !== 'System') {
-                    // Only count actual character responses
-                    if (!(message.message.startsWith('*') && (
-                        message.message.includes('joins the conversation') ||
-                        message.message.includes('leaves the world') ||
-                        message.message.includes('appears in the world') ||
-                        message.message.includes('wanders off')
-                    ))) {
-                        characterInteractions[message.characterId] = (characterInteractions[message.characterId] || 0) + 1;
-                    }
+            // For character interactions, we'll need to fetch full message data
+            // For now, estimate based on participants
+            conversation.participants?.forEach(participant => {
+                if (participant.characterId) {
+                    const estimatedInteractions = Math.floor(messageCount / (conversation.participants?.length || 1));
+                    characterInteractions[participant.characterId] =
+                        (characterInteractions[participant.characterId] || 0) + estimatedInteractions;
                 }
             });
         });
 
-        const averageMessagesPerSession = sessions.length > 0 ? totalConversationMessages / sessions.length : 0;
+        const averageMessagesPerConversation = conversations.length > 0 ? totalMessages / conversations.length : 0;
 
         setStats({
-            totalSessions: sessions.length,
-            totalMessages: totalConversationMessages, // Use conversation messages only
+            totalConversations: conversations.length,
+            totalMessages,
             totalCharacters: characters.length,
-            averageMessagesPerSession: Math.round(averageMessagesPerSession * 100) / 100,
+            averageMessagesPerConversation,
             characterInteractions
         });
-    };
-
-    const toggleSessionSelection = (sessionId: string) => {
-        setSelectedSessions(prev =>
-            prev.includes(sessionId)
-                ? prev.filter(id => id !== sessionId)
-                : [...prev, sessionId]
+    }; const toggleConversationSelection = (conversationId: string) => {
+        setSelectedConversations(prev =>
+            prev.includes(conversationId)
+                ? prev.filter(id => id !== conversationId)
+                : [...prev, conversationId]
         );
     };
 
@@ -147,12 +136,12 @@ export default function DataExport() {
         );
     };
 
-    const selectAllSessions = () => {
-        setSelectedSessions(sessions.map(s => s.id));
+    const selectAllConversations = () => {
+        setSelectedConversations(conversations.map(c => c.id));
     };
 
-    const clearSessionSelection = () => {
-        setSelectedSessions([]);
+    const clearConversationSelection = () => {
+        setSelectedConversations([]);
     };
 
     const selectAllCharacters = () => {
@@ -163,83 +152,67 @@ export default function DataExport() {
         setSelectedCharacters([]);
     };
 
-    const generateFineTuningData = () => {
-        const selectedSessionsData = sessions.filter(session =>
-            selectedSessions.length === 0 || selectedSessions.includes(session.id)
+    const generateFineTuningData = async () => {
+        const selectedConversationsData = conversations.filter(conversation =>
+            selectedConversations.length === 0 || selectedConversations.includes(conversation.id)
         );
 
         const trainingData: any[] = [];
 
-        selectedSessionsData.forEach(session => {
-            // Track the last user message for context
-            let lastUserMessage = '';
-            let conversationContext: any[] = [];
+        // For each selected conversation, fetch the full message data
+        for (const conversation of selectedConversationsData) {
+            try {
+                const messagesResponse = await fetch(`/api/conversations?id=${conversation.id}&includeMessages=true`);
+                if (!messagesResponse.ok) continue;
 
-            session.messages.forEach((message, index) => {
-                if (message.sender === 'User') {
-                    lastUserMessage = message.message;
-                    // Add user message to context
-                    conversationContext.push({
-                        role: 'user',
-                        content: message.message,
-                        timestamp: message.timestamp
-                    });
-                } else if (message.characterId && message.sender !== 'System') {
-                    const character = characters.find(c => c.id === message.characterId);
-                    if (character && (selectedCharacters.length === 0 || selectedCharacters.includes(character.id))) {
-                        // Skip system messages like spawning/despawning
-                        if (message.message.startsWith('*') && (
-                            message.message.includes('joins the conversation') ||
-                            message.message.includes('leaves the world') ||
-                            message.message.includes('appears in the world') ||
-                            message.message.includes('wanders off')
-                        )) {
-                            return; // Skip system spawn/despawn messages
-                        }
+                const conversationWithMessages = await messagesResponse.json();
+                const messages = conversationWithMessages.messages || [];
 
-                        // Create system prompt based on character
-                        const systemPrompt = `You are ${character.name}, a ${character.role}. Your personality is defined by these traits: 
+                // Track the last user message for context
+                let lastUserMessage = '';
+                let conversationContext: any[] = [];
+
+                messages.forEach((message: any) => {
+                    if (message.content && message.characterId) {
+                        const character = characters.find(c => c.id === message.characterId);
+                        if (character && (selectedCharacters.length === 0 || selectedCharacters.includes(character.id))) {
+                            // Create system prompt based on character
+                            const systemPrompt = `You are ${character.name}, a ${character.role}. Your personality is defined by these traits: 
 Emotional Weights - Joy: ${character.foxp2Pattern?.emotionalWeights?.joy || 0.5}, Fear: ${character.foxp2Pattern?.emotionalWeights?.fear || 0.5}, Anger: ${character.foxp2Pattern?.emotionalWeights?.anger || 0.5}, Sadness: ${character.foxp2Pattern?.emotionalWeights?.sadness || 0.5}
 Behavioral Traits - Aggression: ${character.foxp2Pattern?.behavioralTraits?.aggression || 0.5}, Sociability: ${character.foxp2Pattern?.behavioralTraits?.sociability || 0.5}, Curiosity: ${character.foxp2Pattern?.behavioralTraits?.curiosity || 0.5}
 Respond in character based on these traits.`;
 
-                        // Use the most recent user message if available, otherwise use conversation context
-                        const userContent = lastUserMessage || 'Continue the conversation';
+                            // Use conversation context or a generic prompt
+                            const userContent = lastUserMessage || 'Continue the conversation';
 
-                        trainingData.push({
-                            messages: [
-                                { role: 'system', content: systemPrompt },
-                                { role: 'user', content: userContent },
-                                { role: 'assistant', content: message.message }
-                            ],
-                            character_id: character.id,
-                            character_name: character.name,
-                            character_role: character.role,
-                            session_id: session.id,
-                            timestamp: message.timestamp.toISOString(),
-                            conversation_context: conversationContext.slice(-5) // Last 5 messages for context
-                        });
+                            trainingData.push({
+                                messages: [
+                                    { role: 'system', content: systemPrompt },
+                                    { role: 'user', content: userContent },
+                                    { role: 'assistant', content: message.content }
+                                ],
+                                character_id: character.id,
+                                character_name: character.name,
+                                character_role: character.role,
+                                conversation_id: conversation.id,
+                                timestamp: message.timestamp,
+                                conversation_context: conversationContext.slice(-5) // Last 5 messages for context
+                            });
 
-                        // Add character response to context
-                        conversationContext.push({
-                            role: 'assistant',
-                            content: message.message,
-                            character: character.name,
-                            timestamp: message.timestamp
-                        });
+                            // Add character response to context
+                            conversationContext.push({
+                                role: 'assistant',
+                                content: message.content,
+                                character: character.name,
+                                timestamp: message.timestamp
+                            });
+                        }
                     }
-                } else if (message.sender === 'System') {
-                    // Include behavior change messages in training data
-                    if (message.message.includes('[Behavior Change]')) {
-                        conversationContext.push({
-                            role: 'system',
-                            content: message.message,
-                            timestamp: message.timestamp
-                        });
-                    }
-                }
-            });
-        });
+                });
+            } catch (error) {
+                console.error(`Error fetching messages for conversation ${conversation.id}:`, error);
+            }
+        }
 
         return trainingData;
     };
@@ -251,7 +224,7 @@ Respond in character based on these traits.`;
             let dataToExport: any = {};
 
             if (exportType === 'conversations' || exportType === 'both') {
-                dataToExport.conversations = generateFineTuningData();
+                dataToExport.conversations = await generateFineTuningData();
             }
 
             if (exportType === 'characters' || exportType === 'both') {
@@ -266,7 +239,7 @@ Respond in character based on these traits.`;
                 exportType,
                 format: exportFormat,
                 stats: stats,
-                selectedSessions: selectedSessions,
+                selectedConversations: selectedConversations,
                 selectedCharacters: selectedCharacters
             };
 
@@ -332,7 +305,7 @@ Respond in character based on these traits.`;
     };
 
     return (
-        <main className="min-h-screen bg-gradient-to-b from-minecraft-dark-sky to-minecraft-dark-grass p-4">
+        <main className="min-h-screen bg-gradient-to-b from-minecraft-sky to-minecraft-grass p-4">
             <div className="container mx-auto max-w-6xl">
                 {/* Header with Logo */}
                 <div className="minecraft-panel mb-4 text-center">
@@ -353,20 +326,73 @@ Respond in character based on these traits.`;
                 </div>
 
                 {/* Navigation */}
-                <div className="flex justify-between mb-4">
-                    <MinecraftButton
-                        onClick={() => window.location.href = '/world'}
-                        className="text-minecraft-xs"
-                    >
-                        ← Back to World
-                    </MinecraftButton>
+                <div className="flex justify-center mb-4">
                     <MinecraftButton
                         onClick={() => window.location.href = '/'}
                         className="text-minecraft-xs"
                     >
-                        Home
+                        ← Back to Home
                     </MinecraftButton>
                 </div>
+
+                {/* Fine-tuning Instructions */}
+                <MinecraftPanel className="mb-6">
+                    <h3 className="text-minecraft-md font-minecraft text-white mb-4">🤖 AI Model Fine-tuning Instructions</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 className="text-minecraft-sm text-orange-400 mb-3 font-minecraft">📊 Data Format</h4>
+                            <ul className="text-minecraft-xs text-gray-300 space-y-2">
+                                <li><strong className="text-white">JSONL:</strong> OpenAI GPT fine-tuning format - each line contains a training example with system, user, and assistant messages</li>
+                                <li><strong className="text-white">JSON:</strong> Complete structured data with metadata, character profiles, and conversation context</li>
+                                <li><strong className="text-white">CSV:</strong> Simplified tabular format for analysis and custom training pipelines</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="text-minecraft-sm text-blue-400 mb-3 font-minecraft">⚙️ Fine-tuning Platforms</h4>
+                            <ul className="text-minecraft-xs text-gray-300 space-y-2">
+                                <li><strong className="text-white">OpenAI:</strong> Use JSONL format with their fine-tuning API for GPT models</li>
+                                <li><strong className="text-white">Hugging Face:</strong> Convert JSON to their dataset format for open-source models</li>
+                                <li><strong className="text-white">Local Training:</strong> Use CSV/JSON for custom training scripts with frameworks like transformers</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 bg-gray-900/50 border-2 border-gray-600 rounded p-4">
+                        <h4 className="text-minecraft-sm text-green-400 mb-3 font-minecraft">💡 Training Tips</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-minecraft-xs text-gray-300">
+                            <div>
+                                <strong className="text-white block mb-1">Data Quality:</strong>
+                                Select sessions with meaningful character interactions and diverse conversation patterns
+                            </div>
+                            <div>
+                                <strong className="text-white block mb-1">Character Consistency:</strong>
+                                Include FOXP2 personality traits in system prompts to maintain character authenticity
+                            </div>
+                            <div>
+                                <strong className="text-white block mb-1">Training Size:</strong>
+                                Aim for 50-200 quality examples per character for effective fine-tuning results
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-4 bg-blue-900/30 border-2 border-blue-600 rounded p-4">
+                        <h4 className="text-minecraft-sm text-cyan-400 mb-2 font-minecraft">🔧 Quick Start Commands</h4>
+                        <div className="space-y-3">
+                            <div>
+                                <strong className="text-white text-minecraft-xs">OpenAI Fine-tuning:</strong>
+                                <code className="block bg-gray-800 text-green-300 p-2 rounded mt-1 text-minecraft-tiny font-mono">
+                                    openai api fine_tunes.create -t mnemocyte-training-data.jsonl -m gpt-3.5-turbo
+                                </code>
+                            </div>
+                            <div>
+                                <strong className="text-white text-minecraft-xs">Hugging Face Dataset:</strong>
+                                <code className="block bg-gray-800 text-green-300 p-2 rounded mt-1 text-minecraft-tiny font-mono">
+                                    from datasets import Dataset; Dataset.from_json("mnemocyte-data.json")
+                                </code>
+                            </div>
+                        </div>
+                    </div>
+                </MinecraftPanel>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     {/* Statistics Panel */}
@@ -376,7 +402,7 @@ Respond in character based on these traits.`;
                             <div className="space-y-2">
                                 <div className="flex justify-between">
                                     <span className="text-minecraft-xs text-gray-300">Total Sessions:</span>
-                                    <span className="text-minecraft-xs text-white font-bold">{stats.totalSessions}</span>
+                                    <span className="text-minecraft-xs text-white font-bold">{stats.totalConversations}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-minecraft-xs text-gray-300">Total Messages:</span>
@@ -388,7 +414,7 @@ Respond in character based on these traits.`;
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-minecraft-xs text-gray-300">Avg Messages/Session:</span>
-                                    <span className="text-minecraft-xs text-white font-bold">{stats.averageMessagesPerSession}</span>
+                                    <span className="text-minecraft-xs text-white font-bold">{stats.averageMessagesPerConversation}</span>
                                 </div>
                             </div>
                         </MinecraftPanel>
@@ -441,46 +467,49 @@ Respond in character based on these traits.`;
                         </MinecraftPanel>
                     </div>
 
-                    {/* Sessions Selection */}
+                    {/* Conversations Selection */}
                     <div className="lg:col-span-1">
                         <MinecraftPanel>
                             <div className="flex items-center justify-between mb-3">
-                                <h3 className="text-minecraft-sm text-white">Sessions ({selectedSessions.length} selected)</h3>
+                                <h3 className="text-minecraft-sm text-white">Conversations ({selectedConversations.length} selected)</h3>
                                 <div className="flex gap-1">
-                                    <MinecraftButton onClick={selectAllSessions} className="text-minecraft-tiny">
+                                    <MinecraftButton onClick={selectAllConversations} className="text-minecraft-tiny">
                                         All
                                     </MinecraftButton>
-                                    <MinecraftButton onClick={clearSessionSelection} className="text-minecraft-tiny">
+                                    <MinecraftButton onClick={clearConversationSelection} className="text-minecraft-tiny">
                                         None
                                     </MinecraftButton>
                                 </div>
                             </div>
 
                             <div className="space-y-2 max-h-96 overflow-y-auto">
-                                {sessions.map((session) => (
-                                    <div key={session.id} className={`p-2 border-minecraft cursor-pointer ${selectedSessions.includes(session.id) ? 'bg-green-900/30' : 'bg-black/20'
-                                        }`} onClick={() => toggleSessionSelection(session.id)}>
+                                {conversations.map((conversation) => (
+                                    <div key={conversation.id} className={`p-2 border-minecraft cursor-pointer ${selectedConversations.includes(conversation.id) ? 'bg-green-900/30' : 'bg-black/20'
+                                        }`} onClick={() => toggleConversationSelection(conversation.id)}>
                                         <div className="flex items-center">
                                             <input
                                                 type="checkbox"
-                                                checked={selectedSessions.includes(session.id)}
-                                                onChange={() => toggleSessionSelection(session.id)}
+                                                checked={selectedConversations.includes(conversation.id)}
+                                                onChange={() => toggleConversationSelection(conversation.id)}
                                                 className="mr-2"
                                             />
                                             <div className="flex-1">
                                                 <div className="text-minecraft-xs text-white font-bold">
-                                                    {session.startTime.toLocaleDateString()} {session.startTime.toLocaleTimeString()}
+                                                    {conversation.title || `Conversation ${conversation.id.slice(-8)}`}
                                                 </div>
                                                 <div className="text-minecraft-tiny text-gray-400">
-                                                    {session.messages.length} messages • {session.activeCharacters.length} characters
+                                                    {conversation._count?.messages || 0} messages • {conversation.participants?.length || 0} participants
+                                                </div>
+                                                <div className="text-minecraft-tiny text-gray-500">
+                                                    {new Date(conversation.createdAt).toLocaleDateString()}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
-                                {sessions.length === 0 && (
+                                {conversations.length === 0 && (
                                     <div className="text-minecraft-xs text-gray-400 text-center py-4">
-                                        No sessions available
+                                        No conversations available
                                     </div>
                                 )}
                             </div>
