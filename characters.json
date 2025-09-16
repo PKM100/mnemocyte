@@ -1,0 +1,177 @@
+[
+  {
+    "id": "npc_1758007586239_kqkr9",
+    "name": "John Wick",
+    "role": "warrior",
+    "foxp2Pattern": {
+      "id": "703e06f3-ccad-4766-9ea6-dab76a9ad01f",
+      "name": "FOXP2-X1X2A",
+      "emotionalWeights": {
+        "happiness": 0.09,
+        "sadness": 0.77,
+        "anger": 0.84,
+        "fear": 0.11,
+        "curiosity": 0.17,
+        "aggression": 0.8510034198201049
+      },
+      "behavioralTraits": {
+        "sociability": 0.07,
+        "energy": 0.86,
+        "creativity": 0.83,
+        "loyalty": 0.88,
+        "intelligence": 0.87
+      }
+    },
+    "currentMood": 0.20000000000000004,
+    "memoryBank": [],
+    "routines": [],
+    "actions": [
+      {
+        "id": "w1",
+        "name": "Battle Cry",
+        "description": "Boost morale and intimidate enemies"
+      },
+      {
+        "id": "w2",
+        "name": "Shield Bash",
+        "description": "Stun an opponent with your shield"
+      },
+      {
+        "id": "action_1758007580091",
+        "name": "Battle Strike",
+        "description": "Perform a powerful combat move against enemies"
+      }
+    ],
+    "imageUrl": "https://api.dicebear.com/8.x/pixel-art/svg?seed=John+Wick-warrior-18f11fc&backgroundColor=b91c1c&size=128"
+  },
+  {
+    "id": "npc_1758009556442_cpker",
+    "name": "Rock",
+    "role": "guardian",
+    "foxp2Pattern": {
+      "id": "ad05b605-2957-49aa-95c5-ac15db9b2352",
+      "name": "FOXP2-RP41MT",
+      "emotionalWeights": {
+        "happiness": 0.4,
+        "sadness": 0.007429991843056705,
+        "anger": 0.9,
+        "fear": 0.08,
+        "curiosity": 0.34532740489562563,
+        "aggression": 0.83
+      },
+      "behavioralTraits": {
+        "sociability": 0.9624487771255014,
+        "energy": 0.7,
+        "creativity": 0.87,
+        "loyalty": 0.13348833727172527,
+        "intelligence": 0.23
+      }
+    },
+    "currentMood": 0.56,
+    "memoryBank": [],
+    "routines": [],
+    "actions": [
+      {
+        "id": "g1",
+        "name": "Protective Ward",
+        "description": "Create a barrier to protect allies"
+      },
+      {
+        "id": "g2",
+        "name": "Vigilant Watch",
+        "description": "Detect threats and dangers early"
+      }
+    ],
+    "imageUrl": "https://api.dicebear.com/8.x/pixel-art/svg?seed=Rock-wanderer-2860e6a7&backgroundColor=a16207&size=128"
+  },
+  {
+    "id": "npc_1758013178746_klcwa7",
+    "name": "Guy",
+    "role": "scholar",
+    "foxp2Pattern": {
+      "id": "598776e1-9e46-4790-a048-80e161d1585a",
+      "name": "FOXP2-0GW8VF",
+      "emotionalWeights": {
+        "happiness": 0.7336695611524309,
+        "sadness": 0.8716289536145384,
+        "anger": 0.53,
+        "fear": 0.37886536013589167,
+        "curiosity": 0.76,
+        "aggression": 0.07
+      },
+      "behavioralTraits": {
+        "sociability": 0.79,
+        "energy": 0.9628228765900467,
+        "creativity": 0.37,
+        "loyalty": 0.917440281363531,
+        "intelligence": 0.68
+      }
+    },
+    "currentMood": 0.53,
+    "memoryBank": [],
+    "routines": [],
+    "actions": [
+      {
+        "id": "s1",
+        "name": "Research",
+        "description": "Gather detailed information on any topic"
+      },
+      {
+        "id": "s2",
+        "name": "Ancient Knowledge",
+        "description": "Recall historical facts and lore"
+      },
+      {
+        "id": "action_1758013175793",
+        "name": "Knowledge Inquiry",
+        "description": "Research and provide detailed knowledge on topics"
+      }
+    ],
+    "imageUrl": "https://api.dicebear.com/8.x/pixel-art/svg?seed=Guy-scholar-1fc30520&backgroundColor=9333ea&size=128"
+  },
+  {
+    "id": "npc_1758047624447_yoius9",
+    "name": "Liam Neesons",
+    "role": "wanderer",
+    "foxp2Pattern": {
+      "id": "2b8450bf-9010-4d9d-9c9a-6c102de6cfb5",
+      "name": "FOXP2-FPM1G",
+      "emotionalWeights": {
+        "happiness": 0.4,
+        "sadness": 0.59,
+        "anger": 0.95,
+        "fear": 0,
+        "curiosity": 0.76,
+        "aggression": 0.39
+      },
+      "behavioralTraits": {
+        "sociability": 0.64,
+        "energy": 0.35,
+        "creativity": 0.96,
+        "loyalty": 0.87,
+        "intelligence": 0.75
+      }
+    },
+    "currentMood": 0.5,
+    "memoryBank": [],
+    "routines": [],
+    "actions": [
+      {
+        "id": "wan1",
+        "name": "Track",
+        "description": "Follow trails and find hidden paths"
+      },
+      {
+        "id": "wan2",
+        "name": "Survival Instinct",
+        "description": "Find food, water, and shelter"
+      },
+      {
+        "id": "action_1758047617107",
+        "name": "Path Finding",
+        "description": "Guide others through unknown territories"
+      }
+    ],
+    "imageUrl": "https://api.dicebear.com/8.x/pixel-art/svg?seed=Liam+Neesons-wanderer-48c0326e&backgroundColor=a16207&size=128"
+  }
+]

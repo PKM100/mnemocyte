@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Minecraft-style font import */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+    }
+}
+
+/* Minecraft-style theme variables */
+:root {
+    --minecraft-green: #00aa00;
+    --minecraft-dark-green: #005500;
+    --minecraft-gray: #555555;
+    --minecraft-light-gray: #aaaaaa;
+    --minecraft-dark-gray: #333333;
+    --minecraft-brown: #8b4513;
+    --minecraft-dirt: #8b4513;
+}
+
+body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+    font-family: 'Press Start 2P', monospace;
+    image-rendering: pixelated;
+}
+
+/* Minecraft-style button components */
+@layer components {
+    .minecraft-button {
+        @apply bg-gray-400 border-4 border-gray-200 border-t-gray-100 border-l-gray-100 border-r-gray-600 border-b-gray-600;
+        @apply px-4 py-2 text-black font-bold text-sm;
+        @apply hover:bg-gray-300 active:border-t-gray-600 active:border-l-gray-600 active:border-r-gray-100 active:border-b-gray-100;
+        @apply transition-none;
+        font-family: 'Press Start 2P', monospace;
+        image-rendering: pixelated;
+    }
+
+    .minecraft-button:active {
+        transform: translate(1px, 1px);
+    }
+
+    .minecraft-panel {
+        @apply bg-gray-600 border-4 border-gray-400 border-t-gray-200 border-l-gray-200 border-r-gray-800 border-b-gray-800;
+        @apply p-4;
+        image-rendering: pixelated;
+    }
+
+    .minecraft-input {
+        @apply bg-black border-2 border-gray-600 border-t-gray-800 border-l-gray-800 border-r-gray-400 border-b-gray-400;
+        @apply px-2 py-1 text-white text-sm;
+        font-family: 'Press Start 2P', monospace;
+        image-rendering: pixelated;
+    }
+
+    .pixelated {
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
+    }
+
+    /* Custom Minecraft-style animations */
+    @keyframes twinkle {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.3;
+        }
+    }
+
+    .animate-twinkle {
+        animation: twinkle 3s ease-in-out infinite;
+    }
+
+    /* Character building animation */
+    @keyframes build-character {
+        0% {
+            opacity: 0;
+            transform: translateY(20px) scale(0.5);
+        }
+
+        50% {
+            opacity: 0.7;
+            transform: translateY(10px) scale(0.8);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .animate-build {
+        animation: build-character 0.8s ease-out forwards;
+    }
+
+    /* Soccer ball rolling animation */
+    @keyframes roll-ball {
+        0% {
+            transform: translateX(0) rotate(0deg);
+        }
+
+        50% {
+            transform: translateX(8px) rotate(180deg);
+        }
+
+        100% {
+            transform: translateX(16px) rotate(360deg);
+        }
+    }
+
+    .animate-roll {
+        animation: roll-ball 3s ease-in-out infinite;
+    }
+
+    /* FPS walking animation */
+    @keyframes fps-sway {
+
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-2px);
+        }
+    }
+
+    .animate-fps-sway {
+        animation: fps-sway 1.5s ease-in-out infinite;
+    }
+
+    /* Crosshair pulsing */
+    @keyframes crosshair-pulse {
+
+        0%,
+        100% {
+            opacity: 0.9;
+            transform: scale(1);
+            filter: brightness(1);
+        }
+
+        50% {
+            opacity: 1;
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+    }
+
+    .animate-crosshair {
+        animation: crosshair-pulse 1.5s ease-in-out infinite;
+        box-shadow: 0 0 2px rgba(255, 0, 0, 0.5);
+    }
+
+    /* Enhanced character building animation */
+    @keyframes build-character {
+        0% {
+            opacity: 0;
+            transform: translateY(30px) scale(0.3) rotate(45deg);
+        }
+
+        30% {
+            opacity: 0.5;
+            transform: translateY(15px) scale(0.7) rotate(20deg);
+        }
+
+        70% {
+            opacity: 0.8;
+            transform: translateY(5px) scale(0.95) rotate(5deg);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1) rotate(0deg);
+        }
+    }
+
+    .animate-build {
+        animation: build-character 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    }
+}

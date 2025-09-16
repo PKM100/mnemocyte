@@ -1,0 +1,21 @@
+{
+    "name": "Test Hero",
+    "role": "warrior",
+    "foxp2Pattern": {
+        "emotionalWeights": {
+            "joy": 0.8,
+            "fear": 0.2,
+            "anger": 0.3,
+            "sadness": 0.1
+        },
+        "behavioralTraits": {
+            "aggression": 0.7,
+            "sociability": 0.5,
+            "curiosity": 0.6
+        }
+    },
+    "currentMood": 0.7,
+    "memoryBank": [],
+    "routines": [],
+    "actions": []
+}
