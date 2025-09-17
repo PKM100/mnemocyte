@@ -85,9 +85,23 @@ export function generateDefaultActions(role: string): CharacterAction[] {
     ];
 }
 
+// Helper function to generate UUID that works in all environments
+export function generateUUID(): string {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+    
+    // Fallback for environments where crypto.randomUUID is not available
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
 export function generateRandomFOXP2Pattern(): FOXP2NeuralPattern {
     return {
-        id: crypto.randomUUID(),
+        id: generateUUID(),
         name: `FOXP2-${Math.random().toString(36).substring(7).toUpperCase()}`,
         emotionalWeights: {
             happiness: Math.random(),
