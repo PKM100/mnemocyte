@@ -207,13 +207,31 @@ export default function CharacterCreator() {
         <main className="min-h-screen bg-gradient-to-b from-minecraft-sky to-minecraft-grass p-4">
             <div className="container mx-auto max-w-6xl">
                 {/* Header */}
-                <div className="minecraft-panel mb-6 text-center">
-                    <h1 className="text-3xl font-minecraft text-white mb-3">
-                        🧠 FOXP2 Character Creator
-                    </h1>
-                    <p className="text-minecraft-sm text-gray-300">
-                        Design NPCs with advanced neural memory systems
-                    </p>
+                <div className="minecraft-panel mb-6">
+                    <div className="flex justify-between items-center mb-4">
+                        <a href="/">
+                            <MinecraftButton variant="secondary" className="text-minecraft-xs">
+                                🏠 Back to Home
+                            </MinecraftButton>
+                        </a>
+                        <div className="flex justify-center mb-4">
+                            <img
+                                src="/mnemocyte.png"
+                                alt="Mnemocyte Logo"
+                                className="h-16 pixelated"
+                                style={{ width: 'auto' }}
+                            />
+                        </div>
+                        <div></div> {/* Spacer for flex layout balance */}
+                    </div>
+                    <div className="text-center">
+                        <h1 className="text-3xl font-minecraft text-white mb-3">
+                            🧠 FOXP2 Character Creator
+                        </h1>
+                        <p className="text-minecraft-sm text-gray-300">
+                            Design NPCs with advanced neural memory systems
+                        </p>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
