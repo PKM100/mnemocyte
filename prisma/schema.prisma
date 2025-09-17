@@ -10,6 +10,190 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Character {
+  id           String @id
+  name         String
+  role         String
+  description  String?
+  foxp2Pattern String // JSON string
+  currentMood  Float  @default(0.5)
+  memoryBank   String @default("[]") // JSON string
+  routines     String @default("[]") // JSON string  
+  actions      String @default("[]") // JSON string
+  imageUrl     String?
+  isActive     Boolean @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  messages      Message[]
+  participants  ConversationParticipant[]
+  memories      CharacterMemory[]
+  roomMembers   RoomMember[]
+  roomMessages  RoomMessage[]
+
+  @@map("characters")
+}
+
+model Conversation {
+  id          String   @id
+  title       String?
+  type        String   @default("playground")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  isActive    Boolean  @default(true)
+  sessionData String   @default("{}") // JSON string
+
+  // Relations
+  messages     Message[]
+  participants ConversationParticipant[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             String   @id
+  conversationId String
+  characterId    String?
+  content        String
+  type           String   @default("chat")
+  metadata       String   @default("{}") // JSON string
+  messageOrder   Int
+  timestamp      DateTime @default(now())
+
+  // Relations
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  character    Character?   @relation(fields: [characterId], references: [id], onDelete: SetNull)
+
+  @@map("messages")
+}
+
+model ConversationParticipant {
+  id             String   @id
+  conversationId String
+  characterId    String
+  joinedAt       DateTime @default(now())
+  isActive       Boolean  @default(true)
+  lastSeen       DateTime @default(now())
+
+  // Relations
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  character    Character    @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, characterId])
+  @@map("conversation_participants")
+}
+
+model Session {
+  id                    String   @id
+  sessionData           String   @default("{}")
+  currentConversationId String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  lastActivity          DateTime @default(now())
+  isActive              Boolean  @default(true)
+
+  @@map("sessions")
+}
+
+model CharacterRole {
+  id          String   @id
+  name        String   @unique
+  description String
+  actions     String   @default("[]") // JSON string
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("character_roles")
+}
+
+model Action {
+  id          String   @id
+  name        String   @unique
+  description String
+  effects     String   @default("[]") // JSON string
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("actions")
+}
+
+model MemoryTemplate {
+  id        String   @id
+  heading   String   @unique
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("memory_templates")
+}
+
+model CharacterMemory {
+  id          String   @id
+  characterId String
+  content     String
+  context     String   @default("{}")
+  importance  Float    @default(0.5)
+  createdAt   DateTime @default(now())
+
+  // Relations
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@map("character_memories")
+}
+
+model Room {
+  id          String   @id
+  name        String
+  description String?
+  maxMembers  Int      @default(10)
+  isActive    Boolean  @default(true)
+  createdBy   String?
+  metadata    String   @default("{}") // JSON string for room settings
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  members     RoomMember[]
+  messages    RoomMessage[]
+
+  @@map("rooms")
+}
+
+model RoomMember {
+  id         String   @id
+  roomId     String
+  characterId String
+  joinedAt   DateTime @default(now())
+  isActive   Boolean  @default(true)
+  role       String   @default("member") // member, moderator, admin
+  lastSeen   DateTime @default(now())
+
+  // Relations
+  room       Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  character  Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, characterId])
+  @@map("room_members")
+}
+
+model RoomMessage {
+  id           String   @id
+  roomId       String
+  characterId  String?
+  content      String
+  type         String   @default("chat") // chat, system, action
+  metadata     String   @default("{}") // JSON string
+  messageOrder Int
+  timestamp    DateTime @default(now())
+
+  // Relations
+  room         Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  character    Character? @relation(fields: [characterId], references: [id], onDelete: SetNull)
+
+  @@map("room_messages")
 }

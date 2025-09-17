@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NPCCharacter } from '@/lib/utils';
 import { AzureOpenAI } from 'openai';
+import { PrismaClient } from '../../../../generated/prisma';
+
+const prisma = new PrismaClient();
 
 interface ChatRequest {
     message: string;
     character: NPCCharacter;
+    conversationId?: string;
     conversationHistory: Array<{
         sender: 'user' | 'npc' | string;
         message: string;
@@ -24,7 +28,7 @@ interface ChatRequest {
 
 export async function POST(request: NextRequest) {
     try {
-        const { message, character, conversationHistory, worldContext }: ChatRequest = await request.json();
+        const { message, character, conversationId, conversationHistory, worldContext }: ChatRequest = await request.json();
 
         if (!message || !character) {
             return NextResponse.json(
@@ -36,6 +40,11 @@ export async function POST(request: NextRequest) {
         // Generate AI response using character's FOXP2 neural pattern
         const aiResponse = await generateAIResponse(message, character, conversationHistory, worldContext);
 
+        // Save conversation and messages to database
+        if (conversationId) {
+            await saveConversationMessages(conversationId, message, aiResponse.response, character.id, aiResponse.systemPrompt);
+        }
+
         return NextResponse.json(aiResponse);
     } catch (error) {
         console.error('Chat API error:', error);
@@ -43,6 +52,8 @@ export async function POST(request: NextRequest) {
             { error: 'Failed to generate response' },
             { status: 500 }
         );
+    } finally {
+        await prisma.$disconnect();
     }
 }
 
@@ -61,21 +72,22 @@ async function generateAIResponse(
     }
 ) {
     // Determine if character should respond based on context
+    // Create a detailed prompt based on the character's FOXP2 neural pattern
+    let systemPrompt = createCharacterPrompt(character, worldContext);
+
     const shouldRespond = determineResponseProbability(character, userMessage, worldContext);
 
     if (!shouldRespond) {
         return {
             shouldRespond: false,
             response: null,
-            behaviorChanged: false
+            behaviorChanged: false,
+            systemPrompt: systemPrompt
         };
     }
 
     // Check for behavior changes
     const behaviorChangeResult = processBehaviorChange(character, userMessage, worldContext);
-
-    // Create a detailed prompt based on the character's FOXP2 neural pattern
-    let systemPrompt = createCharacterPrompt(character, worldContext);
 
     // Apply temporary behavior changes
     if (behaviorChangeResult.behaviorChanged) {
@@ -90,7 +102,8 @@ async function generateAIResponse(
                 shouldRespond: true,
                 response: aiServiceResponse.response,
                 behaviorChanged: behaviorChangeResult.behaviorChanged,
-                newBehaviorPrompt: behaviorChangeResult.newBehaviorPrompt
+                newBehaviorPrompt: behaviorChangeResult.newBehaviorPrompt,
+                systemPrompt: systemPrompt
             };
         }
     } catch (error) {
@@ -374,29 +387,39 @@ async function callAzureOpenAI(systemPrompt: string, userMessage: string, histor
             { role: 'user', content: userMessage }
         ];
 
-        const endpoint = process.env.AZURE_OPENAI_ENDPOINT || "https://1ptest-project-resource.openai.azure.com/";
+        const endpoint = process.env.AZURE_OPENAI_ENDPOINT || "https://1ptest-project-resource.cognitiveservices.azure.com/";
         const apiKey = process.env.AZURE_OPENAI_API_KEY;
         const apiVersion = process.env.AZURE_OPENAI_API_VERSION || "2025-01-01-preview";
         const deployment = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || "gpt-4.1";
 
-        const client = new AzureOpenAI({
-            endpoint,
-            apiKey,
-            apiVersion,
-            deployment
+        if (!apiKey) {
+            throw new Error('Azure OpenAI API key is not configured');
+        }
+
+        // Use direct fetch for cognitiveservices.azure.com endpoints
+        const url = `${endpoint}openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'api-key': apiKey
+            },
+            body: JSON.stringify({
+                messages: messages,
+                max_tokens: 300,
+                temperature: 0.9,
+                top_p: 0.95,
+                frequency_penalty: 0.3,
+                presence_penalty: 0.6
+            })
         });
 
-        const result = await client.chat.completions.create({
-            model: deployment,
-            messages: messages as any,
-            max_tokens: 300,
-            temperature: 0.9,
-            top_p: 0.95,
-            frequency_penalty: 0.3,
-            presence_penalty: 0.6,
-            stop: null
-        });
+        if (!response.ok) {
+            throw new Error(`Azure OpenAI API error: ${response.status} ${response.statusText}`);
+        }
 
+        const result = await response.json();
         const aiResponse = result.choices?.[0]?.message?.content || 'I need a moment to think...';
 
         return {
@@ -1453,4 +1476,50 @@ function processBehaviorChange(
     }
 
     return { behaviorChanged: false };
+}
+
+async function saveConversationMessages(conversationId: string, userMessage: string, aiResponse: string, characterId: string, systemPrompt?: string) {
+    try {
+        // Get the current message count for ordering
+        const messageCount = await prisma.message.count({
+            where: { conversationId }
+        });
+
+        // Generate unique IDs for messages
+        const userMessageId = `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        const aiMessageId = `msg_${Date.now() + 1}_${Math.random().toString(36).substr(2, 9)}`;
+
+        // Save user message
+        await prisma.message.create({
+            data: {
+                id: userMessageId,
+                conversationId,
+                content: userMessage,
+                characterId: null, // User messages don't have a character
+                messageOrder: messageCount
+            }
+        });
+
+        // Save AI response with prompt metadata
+        await prisma.message.create({
+            data: {
+                id: aiMessageId,
+                conversationId,
+                content: aiResponse,
+                characterId,
+                messageOrder: messageCount + 1,
+                metadata: systemPrompt ? JSON.stringify({ systemPrompt }) : "{}"
+            }
+        });
+
+        // Update conversation timestamp
+        await prisma.conversation.update({
+            where: { id: conversationId },
+            data: { updatedAt: new Date() }
+        });
+
+    } catch (error) {
+        console.error('Error saving conversation messages:', error);
+        // Don't throw error to avoid breaking the chat response
+    }
 }

@@ -20,6 +20,7 @@ export default function Playground() {
     const [inputMessage, setInputMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
+    const [conversationId, setConversationId] = useState<string | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -52,8 +53,51 @@ export default function Playground() {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    const selectCharacter = (character: NPCCharacter) => {
+    const selectCharacter = async (character: NPCCharacter) => {
         setSelectedCharacter(character);
+
+        // Create a new conversation in the database
+        try {
+            const response = await fetch('/api/conversations', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'create_conversation',
+                    title: `Chat with ${character.name}`,
+                    type: 'playground',
+                    characterIds: [character.id]
+                }),
+            });
+
+            if (response.ok) {
+                const { conversation } = await response.json();
+                setConversationId(conversation.id);
+
+                // Add the character as a participant in the conversation
+                await fetch('/api/conversations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'add_participant',
+                        conversationId: conversation.id,
+                        characterId: character.id
+                    }),
+                });
+            } else {
+                console.error('Failed to create conversation');
+                // Generate a fallback conversation ID
+                setConversationId(`conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+            }
+        } catch (error) {
+            console.error('Error creating conversation:', error);
+            // Generate a fallback conversation ID
+            setConversationId(`conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+        }
+
         setMessages([
             {
                 id: 'welcome',
@@ -108,7 +152,14 @@ export default function Playground() {
                 body: JSON.stringify({
                     message: inputMessage.trim(),
                     character: selectedCharacter,
-                    conversationHistory: messages.slice(-5) // Last 5 messages for context
+                    conversationId: conversationId,
+                    conversationHistory: messages.slice(-5), // Last 5 messages for context
+                    worldContext: {
+                        activeCharacters: [{ name: selectedCharacter.name, role: selectedCharacter.role }],
+                        isMultiCharacter: false,
+                        isDirectlyMentioned: true, // In playground, all messages are direct
+                        isGeneralQuestion: false
+                    }
                 }),
             });
 
