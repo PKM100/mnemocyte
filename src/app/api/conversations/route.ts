@@ -5,6 +5,82 @@ const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
     try {
+        const { searchParams } = new URL(request.url);
+        const conversationId = searchParams.get('id');
+        const includeMessages = searchParams.get('includeMessages') === 'true';
+
+        // If requesting a specific conversation, use findUnique
+        if (conversationId) {
+            const conversation = await prisma.conversation.findUnique({
+                where: { id: conversationId },
+                include: {
+                    messages: {
+                        include: {
+                            character: true
+                        },
+                        orderBy: {
+                            messageOrder: 'asc'
+                        }
+                    },
+                    participants: {
+                        include: {
+                            character: true
+                        }
+                    },
+                    _count: {
+                        select: {
+                            messages: true
+                        }
+                    }
+                }
+            });
+
+            if (!conversation) {
+                console.log(`Conversation not found: ${conversationId}`);
+                return NextResponse.json({ error: 'Conversation not found' }, { status: 404 });
+            }
+
+            console.log(`Found conversation ${conversationId} with ${conversation.messages.length} messages`);
+
+            // Transform single conversation
+            const transformedConversation = {
+                id: conversation.id,
+                title: conversation.title,
+                type: conversation.type,
+                createdAt: conversation.createdAt.toISOString(),
+                updatedAt: conversation.updatedAt.toISOString(),
+                isActive: conversation.isActive,
+                messages: conversation.messages.map(message => ({
+                    id: message.id,
+                    content: message.content,
+                    characterId: message.characterId,
+                    timestamp: message.timestamp.toISOString(),
+                    character: message.character ? {
+                        id: message.character.id,
+                        name: message.character.name,
+                        role: message.character.role,
+                        foxp2Pattern: message.character.foxp2Pattern
+                    } : null,
+                    messageOrder: message.messageOrder
+                })),
+                participants: conversation.participants.map(participant => ({
+                    characterId: participant.characterId,
+                    character: participant.character ? {
+                        id: participant.character.id,
+                        name: participant.character.name,
+                        role: participant.character.role,
+                        foxp2Pattern: participant.character.foxp2Pattern
+                    } : null
+                })),
+                _count: {
+                    messages: conversation._count.messages
+                }
+            };
+
+            return NextResponse.json(transformedConversation);
+        }
+
+        // Otherwise, get all conversations
         const conversations = await prisma.conversation.findMany({
             include: {
                 messages: {

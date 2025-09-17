@@ -177,49 +177,64 @@ export default function DataExport() {
         for (const conversation of selectedConversationsData) {
             try {
                 const messagesResponse = await fetch(`/api/conversations?id=${conversation.id}&includeMessages=true`);
-                if (!messagesResponse.ok) continue;
+                if (!messagesResponse.ok) {
+                    continue;
+                }
 
                 const conversationWithMessages = await messagesResponse.json();
-                const messages = conversationWithMessages.messages || [];
+
+                // The API now returns a single conversation object when requesting by ID
+                const messages = conversationWithMessages?.messages || [];
 
                 // Track the last user message for context
                 let lastUserMessage = '';
                 let conversationContext: any[] = [];
 
                 messages.forEach((message: any) => {
-                    if (message.content && message.characterId) {
-                        const character = characters.find(c => c.id === message.characterId);
-                        if (character && (selectedCharacters.length === 0 || selectedCharacters.includes(character.id))) {
-                            // Create system prompt based on character
-                            const systemPrompt = `You are ${character.name}, a ${character.role}. Your personality is defined by these traits: 
+                    if (message.content) {
+                        if (!message.characterId) {
+                            // This is a user message
+                            lastUserMessage = message.content;
+                            conversationContext.push({
+                                role: 'user',
+                                content: message.content,
+                                timestamp: message.timestamp
+                            });
+                        } else {
+                            // This is a character message
+                            const character = characters.find(c => c.id === message.characterId);
+                            if (character && (selectedCharacters.length === 0 || selectedCharacters.includes(character.id))) {
+                                // Create system prompt based on character
+                                const systemPrompt = `You are ${character.name}, a ${character.role}. Your personality is defined by these traits: 
 Emotional Weights - Joy: ${character.foxp2Pattern?.emotionalWeights?.joy || 0.5}, Fear: ${character.foxp2Pattern?.emotionalWeights?.fear || 0.5}, Anger: ${character.foxp2Pattern?.emotionalWeights?.anger || 0.5}, Sadness: ${character.foxp2Pattern?.emotionalWeights?.sadness || 0.5}
 Behavioral Traits - Aggression: ${character.foxp2Pattern?.behavioralTraits?.aggression || 0.5}, Sociability: ${character.foxp2Pattern?.behavioralTraits?.sociability || 0.5}, Curiosity: ${character.foxp2Pattern?.behavioralTraits?.curiosity || 0.5}
 Respond in character based on these traits.`;
 
-                            // Use conversation context or a generic prompt
-                            const userContent = lastUserMessage || 'Continue the conversation';
+                                // Use the actual user message if we have one
+                                const userContent = lastUserMessage || 'Continue the conversation';
 
-                            trainingData.push({
-                                messages: [
-                                    { role: 'system', content: systemPrompt },
-                                    { role: 'user', content: userContent },
-                                    { role: 'assistant', content: message.content }
-                                ],
-                                character_id: character.id,
-                                character_name: character.name,
-                                character_role: character.role,
-                                conversation_id: conversation.id,
-                                timestamp: message.timestamp,
-                                conversation_context: conversationContext.slice(-5) // Last 5 messages for context
-                            });
+                                trainingData.push({
+                                    messages: [
+                                        { role: 'system', content: systemPrompt },
+                                        { role: 'user', content: userContent },
+                                        { role: 'assistant', content: message.content }
+                                    ],
+                                    character_id: character.id,
+                                    character_name: character.name,
+                                    character_role: character.role,
+                                    conversation_id: conversation.id,
+                                    timestamp: message.timestamp,
+                                    conversation_context: conversationContext.slice(-5) // Last 5 messages for context
+                                });
 
-                            // Add character response to context
-                            conversationContext.push({
-                                role: 'assistant',
-                                content: message.content,
-                                character: character.name,
-                                timestamp: message.timestamp
-                            });
+                                // Add character response to context
+                                conversationContext.push({
+                                    role: 'assistant',
+                                    content: message.content,
+                                    character: character.name,
+                                    timestamp: message.timestamp
+                                });
+                            }
                         }
                     }
                 });
@@ -238,7 +253,8 @@ Respond in character based on these traits.`;
             let dataToExport: any = {};
 
             if (exportType === 'conversations' || exportType === 'both') {
-                dataToExport.conversations = await generateFineTuningData();
+                const conversationData = await generateFineTuningData();
+                dataToExport.conversations = conversationData;
             }
 
             if (exportType === 'characters' || exportType === 'both') {
@@ -264,18 +280,19 @@ Respond in character based on these traits.`;
             switch (exportFormat) {
                 case 'jsonl':
                     // JSONL format for fine-tuning (one JSON object per line)
-                    content = dataToExport.conversations
-                        ?.map((item: any) => JSON.stringify(item))
-                        .join('\n') || '';
+                    const conversationsForJsonl = dataToExport.conversations || [];
+                    content = conversationsForJsonl
+                        .map((item: any) => JSON.stringify(item))
+                        .join('\n');
                     filename = `mnemocyte-training-data-${Date.now()}.jsonl`;
                     mimeType = 'application/jsonl';
                     break;
 
                 case 'csv':
                     // CSV format
-                    const conversations = dataToExport.conversations || [];
+                    const conversationsForCsv = dataToExport.conversations || [];
                     const csvHeaders = ['character_name', 'character_role', 'user_message', 'assistant_response', 'timestamp', 'session_id'];
-                    const csvRows = conversations.map((conv: any) => [
+                    const csvRows = conversationsForCsv.map((conv: any) => [
                         conv.character_name,
                         conv.character_role,
                         conv.messages[1].content.replace(/"/g, '""'), // Escape quotes
