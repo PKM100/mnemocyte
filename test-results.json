@@ -1,114 +1,94 @@
 {
-  "passed": 11,
-  "failed": 0,
+  "passed": 3,
+  "failed": 8,
   "total": 11,
   "tests": [
     {
       "name": "GET /api/characters",
       "success": true,
-      "duration": 15,
+      "duration": 10,
       "details": {
-        "count": 4
+        "count": 0
       }
     },
     {
       "name": "POST /api/characters",
       "success": true,
-      "duration": 13,
+      "duration": 12,
       "details": {
-        "characterId": "cmfn2p12k00294cyh9m0emi5y",
+        "characterId": "npc_1758127524859_4y7g5e",
         "name": "Test Character API",
-        "role": "API Tester"
+        "role": "API Tester",
+        "mode": "actual"
       }
     },
     {
       "name": "GET /api/characters/{id}",
-      "success": true,
-      "duration": 104,
-      "details": {
-        "characterId": "cmfn2p12k00294cyh9m0emi5y",
-        "name": "Test Character API",
-        "conversationCount": 0
-      }
+      "success": false,
+      "error": "HTTP 0",
+      "duration": 13,
+      "details": {}
     },
     {
       "name": "PUT /api/characters/{id}",
-      "success": true,
-      "duration": 14,
-      "details": {
-        "characterId": "cmfn2p12k00294cyh9m0emi5y",
-        "newName": "Updated Test Character",
-        "newMood": 0.85
-      }
+      "success": false,
+      "error": "HTTP 0: undefined",
+      "duration": 10,
+      "details": {}
     },
     {
       "name": "POST /api/characters/{id}/chat",
-      "success": true,
-      "duration": 125,
-      "details": {
-        "conversationId": "cmfn2p197002a4cyhis1l0qvn",
-        "characterResponse": "That reminds me of something! As Updated Test Char..."
-      }
+      "success": false,
+      "error": "HTTP 0: undefined",
+      "duration": 13,
+      "details": {}
     },
     {
       "name": "GET /api/characters/{id}/chat",
-      "success": true,
-      "duration": 10,
-      "details": {
-        "messageCount": 2,
-        "hasMore": false
-      }
+      "success": false,
+      "error": "HTTP 0",
+      "duration": 11,
+      "details": {}
     },
     {
       "name": "GET /api/characters/{id}/status",
-      "success": true,
-      "duration": 124,
-      "details": {
-        "status": "in_conversation",
-        "activity": "socializing",
-        "mood": "high"
-      }
+      "success": false,
+      "error": "HTTP 0",
+      "duration": 10,
+      "details": {}
     },
     {
       "name": "GET /api/characters/status",
       "success": true,
-      "duration": 115,
+      "duration": 12,
       "details": {
-        "totalCharacters": 5,
-        "activeCharacters": 5,
-        "averageMood": 0.5240958538291653
+        "totalCharacters": 1,
+        "activeCharacters": 1,
+        "averageMood": 0.5
       }
     },
     {
       "name": "POST /api/rooms",
-      "success": true,
-      "duration": 30,
-      "details": {
-        "roomId": "cmfn2p1h2002i4cyhg233b931",
-        "name": "API Test Room",
-        "participantCount": 2
-      }
+      "success": false,
+      "error": "Created room missing required fields",
+      "duration": 21,
+      "details": {}
     },
     {
       "name": "GET /api/rooms",
-      "success": true,
-      "duration": 6,
-      "details": {
-        "roomCount": 2,
-        "hasMore": false
-      }
+      "success": false,
+      "error": "Response should contain rooms array",
+      "duration": 9,
+      "details": {}
     },
     {
       "name": "POST /api/rooms/{id}/chat",
-      "success": true,
-      "duration": 134,
-      "details": {
-        "roomId": "cmfn2p1h2002i4cyhg233b931",
-        "messageId": "cmfn2p1kw002p4cyhtwlh0n4f",
-        "characterResponses": 1
-      }
+      "success": false,
+      "error": "No test rooms available",
+      "duration": 0,
+      "details": {}
     }
   ],
-  "timestamp": "2025-09-16T21:36:35.052Z",
+  "timestamp": "2025-09-17T16:45:24.979Z",
   "baseUrl": "http://localhost:3000/api"
 }

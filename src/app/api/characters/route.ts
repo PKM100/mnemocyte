@@ -1,43 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NPCCharacter } from '@/lib/utils';
-import fs from 'fs';
-import path from 'path';
+import { PrismaClient } from '../../../../generated/prisma';
 
-// File-based storage for development persistence
-const CHARACTERS_FILE = path.join(process.cwd(), 'characters.json');
-
-// Load characters from file on startup
-let savedCharacters: NPCCharacter[] = [];
-
-function loadCharactersFromFile() {
-    try {
-        if (fs.existsSync(CHARACTERS_FILE)) {
-            const data = fs.readFileSync(CHARACTERS_FILE, 'utf8');
-            savedCharacters = JSON.parse(data);
-            console.log('Loaded', savedCharacters.length, 'characters from file');
-        }
-    } catch (error) {
-        console.error('Error loading characters from file:', error);
-        savedCharacters = [];
-    }
-}
-
-function saveCharactersToFile() {
-    try {
-        fs.writeFileSync(CHARACTERS_FILE, JSON.stringify(savedCharacters, null, 2));
-        console.log('Saved', savedCharacters.length, 'characters to file');
-    } catch (error) {
-        console.error('Error saving characters to file:', error);
-    }
-}
-
-// Load characters on module initialization
-loadCharactersFromFile();
+const prisma = new PrismaClient();
 
 export async function GET() {
-    console.log('GET /api/characters called, current characters:', savedCharacters.length);
-    console.log('Characters:', savedCharacters.map(c => ({ id: c.id, name: c.name })));
-    return NextResponse.json(savedCharacters);
+    try {
+        console.log('GET /api/characters called');
+
+        const characters = await prisma.character.findMany({
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+
+        // Transform database characters to NPCCharacter format
+        const transformedCharacters: NPCCharacter[] = characters.map(character => ({
+            id: character.id,
+            name: character.name,
+            role: character.role as NPCCharacter['role'], // Type assertion for role
+            foxp2Pattern: JSON.parse(character.foxp2Pattern),
+            currentMood: character.currentMood,
+            memoryBank: JSON.parse(character.memoryBank),
+            routines: JSON.parse(character.routines),
+            actions: JSON.parse(character.actions),
+            imageUrl: character.imageUrl || undefined
+        }));
+
+        console.log('Loaded', transformedCharacters.length, 'characters from database');
+        console.log('Characters:', transformedCharacters.map(c => ({ id: c.id, name: c.name })));
+
+        return NextResponse.json(transformedCharacters);
+    } catch (error) {
+        console.error('Error loading characters from database:', error);
+        return NextResponse.json({ error: 'Failed to load characters' }, { status: 500 });
+    } finally {
+        await prisma.$disconnect();
+    }
 }
 
 export async function POST(request: NextRequest) {
@@ -57,27 +56,38 @@ export async function POST(request: NextRequest) {
             character.id = `npc_${Date.now()}_${Math.random().toString(36).substring(7)}`;
         }
 
-        // Check if character already exists (update vs create)
-        const existingIndex = savedCharacters.findIndex(c => c.id === character.id);
-
-        if (existingIndex >= 0) {
-            // Update existing character
-            savedCharacters[existingIndex] = character;
-        } else {
-            // Add new character
-            savedCharacters.push(character);
-        }
-
-        // Save to file after adding/updating character
-        saveCharactersToFile();
+        // Upsert character in database
+        const savedCharacter = await prisma.character.upsert({
+            where: { id: character.id },
+            update: {
+                name: character.name,
+                role: character.role,
+                foxp2Pattern: JSON.stringify(character.foxp2Pattern),
+                currentMood: character.currentMood,
+                memoryBank: JSON.stringify(character.memoryBank || []),
+                routines: JSON.stringify(character.routines || []),
+                actions: JSON.stringify(character.actions || []),
+                imageUrl: character.imageUrl
+            },
+            create: {
+                id: character.id,
+                name: character.name,
+                role: character.role,
+                foxp2Pattern: JSON.stringify(character.foxp2Pattern),
+                currentMood: character.currentMood,
+                memoryBank: JSON.stringify(character.memoryBank || []),
+                routines: JSON.stringify(character.routines || []),
+                actions: JSON.stringify(character.actions || []),
+                imageUrl: character.imageUrl
+            }
+        });
 
         console.log('POST /api/characters - Character saved:', character.name);
-        console.log('Total characters now:', savedCharacters.length);
 
         return NextResponse.json({
             success: true,
             character,
-            message: `Character "${character.name}" ${existingIndex >= 0 ? 'updated' : 'saved'} successfully!`
+            message: `Character "${character.name}" saved successfully!`
         });
     } catch (error) {
         console.error('Error saving character:', error);
@@ -85,6 +95,8 @@ export async function POST(request: NextRequest) {
             { error: 'Failed to save character' },
             { status: 500 }
         );
+    } finally {
+        await prisma.$disconnect();
     }
 }
 
@@ -100,10 +112,9 @@ export async function DELETE(request: NextRequest) {
             );
         }
 
-        savedCharacters = savedCharacters.filter(c => c.id !== characterId);
-
-        // Save to file after deletion
-        saveCharactersToFile();
+        await prisma.character.delete({
+            where: { id: characterId }
+        });
 
         return NextResponse.json({
             success: true,
@@ -115,5 +126,7 @@ export async function DELETE(request: NextRequest) {
             { error: 'Failed to delete character' },
             { status: 500 }
         );
+    } finally {
+        await prisma.$disconnect();
     }
 }

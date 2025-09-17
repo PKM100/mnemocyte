@@ -173,5 +173,45 @@
       }
     ],
     "imageUrl": "https://api.dicebear.com/8.x/pixel-art/svg?seed=Liam+Neesons-wanderer-48c0326e&backgroundColor=a16207&size=128"
+  },
+  {
+    "id": "npc_1758087291846_qf6kce",
+    "name": "Prince",
+    "role": "wanderer",
+    "foxp2Pattern": {
+      "id": "cd89642f-c864-4245-8ac0-8136571cb2bd",
+      "name": "FOXP2-27MFX8",
+      "emotionalWeights": {
+        "happiness": 0.41,
+        "sadness": 0.66,
+        "anger": 0.45,
+        "fear": 0.42,
+        "curiosity": 0.29,
+        "aggression": 0.69
+      },
+      "behavioralTraits": {
+        "sociability": 0.52,
+        "energy": 0.44,
+        "creativity": 0.38,
+        "loyalty": 0.64,
+        "intelligence": 0.22
+      }
+    },
+    "currentMood": 0.5,
+    "memoryBank": [],
+    "routines": [],
+    "actions": [
+      {
+        "id": "wan1",
+        "name": "Track",
+        "description": "Follow trails and find hidden paths"
+      },
+      {
+        "id": "wan2",
+        "name": "Survival Instinct",
+        "description": "Find food, water, and shelter"
+      }
+    ],
+    "imageUrl": "https://api.dicebear.com/8.x/pixel-art/svg?seed=Prince-wanderer-4a0d9d72&backgroundColor=92400e&size=128"
   }
 ]

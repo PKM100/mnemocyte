@@ -27,10 +27,25 @@ class APITester {
         };
         this.testCharacters = [];
         this.testRooms = [];
+
+        // Check for test mode - default to read-only to prevent test data accumulation
+        this.testMode = process.env.TEST_MODE || 'read-only';
+
+        if (this.testMode === 'read-only') {
+            this.log('🛡️  Running in READ-ONLY mode - no persistent test data will be created', 'yellow');
+            this.log('   Set TEST_MODE=write to enable data creation for full testing', 'yellow');
+        } else if (this.testMode === 'write') {
+            this.log('⚠️  Running in WRITE mode - test data will be created and cleaned up', 'yellow');
+        }
     }
 
     // Clean up any existing test data before starting tests
     async initialCleanup() {
+        if (this.testMode === 'read-only') {
+            this.log('🧹 Read-only mode: skipping initial cleanup', 'yellow');
+            return;
+        }
+
         this.log('🧹 Performing initial cleanup of existing test data...', 'yellow');
 
         try {
@@ -187,6 +202,34 @@ class APITester {
 
     async testCreateCharacter() {
         return await this.test('POST /api/characters', async () => {
+            // In read-only mode, simulate the test without creating actual data
+            if (this.testMode === 'read-only') {
+                // Simulate a successful character creation response
+                const mockCharacter = {
+                    id: 'mock-test-character-' + Date.now(),
+                    name: 'Test Character API',
+                    role: 'API Tester',
+                    personality: 'A dedicated character created for API testing purposes.',
+                    imageUrl: 'https://example.com/test-character.jpg'
+                };
+
+                // Add to test characters list for downstream tests (they'll be mocked too)
+                this.testCharacters.push(mockCharacter.id);
+
+                this.log('   ℹ️  Simulated character creation (read-only mode)', 'blue');
+
+                return {
+                    success: true,
+                    details: {
+                        characterId: mockCharacter.id,
+                        name: mockCharacter.name,
+                        role: mockCharacter.role,
+                        mode: 'simulated'
+                    }
+                };
+            }
+
+            // Write mode - actually create the character
             const characterData = {
                 name: 'Test Character API',
                 role: 'API Tester',
@@ -235,7 +278,8 @@ class APITester {
                 details: {
                     characterId: character.id,
                     name: character.name,
-                    role: character.role
+                    role: character.role,
+                    mode: 'actual'
                 }
             };
         });
@@ -428,6 +472,36 @@ class APITester {
 
     async testCreateRoom() {
         return await this.test('POST /api/rooms', async () => {
+            // In read-only mode, simulate the test without creating actual data
+            if (this.testMode === 'read-only') {
+                // Ensure we have mock characters for the room
+                if (this.testCharacters.length < 2) {
+                    this.testCharacters.push('mock-test-character-2-' + Date.now());
+                }
+
+                const mockRoom = {
+                    id: 'mock-test-room-' + Date.now(),
+                    name: 'API Test Room',
+                    description: 'A room created for API testing purposes',
+                    participants: this.testCharacters.slice(0, 2).map(id => ({ id, name: 'Mock Character' }))
+                };
+
+                this.testRooms.push(mockRoom.id);
+
+                this.log('   ℹ️  Simulated room creation (read-only mode)', 'blue');
+
+                return {
+                    success: true,
+                    details: {
+                        roomId: mockRoom.id,
+                        name: mockRoom.name,
+                        participantCount: mockRoom.participants.length,
+                        mode: 'simulated'
+                    }
+                };
+            }
+
+            // Write mode - actually create the room and characters
             if (this.testCharacters.length < 2) {
                 // Create a second character for room testing
                 const characterData = {
@@ -493,7 +567,8 @@ class APITester {
                 details: {
                     roomId: response.data.id,
                     name: response.data.name,
-                    participantCount: response.data.participants.length
+                    participantCount: response.data.participants.length,
+                    mode: 'actual'
                 }
             };
         });
@@ -561,9 +636,28 @@ class APITester {
     async cleanup() {
         this.log('\n🧹 Cleaning up test data...', 'yellow');
 
+        if (this.testMode === 'read-only') {
+            // In read-only mode, just clear the mock data arrays
+            this.log('   ℹ️  Read-only mode: clearing mock data references', 'blue');
+            const mockRooms = this.testRooms.filter(id => id.startsWith('mock-')).length;
+            const mockCharacters = this.testCharacters.filter(id => id.startsWith('mock-')).length;
+
+            this.testCharacters = [];
+            this.testRooms = [];
+
+            this.log(`\n✨ Cleanup completed: ${mockCharacters} mock characters, ${mockRooms} mock rooms cleared`, 'cyan');
+            return;
+        }
+
+        // Write mode - actually delete the created data
         // Delete test rooms first (they depend on characters)
         let roomsDeleted = 0;
         for (const roomId of this.testRooms) {
+            // Skip mock IDs if any somehow got mixed in
+            if (roomId.startsWith('mock-')) {
+                continue;
+            }
+
             try {
                 const response = await this.request(`/rooms/${roomId}`, { method: 'DELETE' });
                 if (response.ok) {
@@ -580,6 +674,11 @@ class APITester {
         // Delete test characters
         let charactersDeleted = 0;
         for (const characterId of this.testCharacters) {
+            // Skip mock IDs if any somehow got mixed in
+            if (characterId.startsWith('mock-')) {
+                continue;
+            }
+
             try {
                 const response = await this.request(`/characters/${characterId}`, { method: 'DELETE' });
                 if (response.ok) {

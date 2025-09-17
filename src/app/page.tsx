@@ -24,11 +24,6 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {/* Character Creator */}
                     <div className="minecraft-panel relative">
-                        <img
-                            src="/mnemocyte.png"
-                            alt=""
-                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
-                        />
                         <div className="text-center mb-4">
                             <div className="w-16 h-16 mx-auto mb-3 relative overflow-hidden">
                                 {/* Base character silhouette */}
@@ -85,11 +80,6 @@ export default function Home() {
 
                     {/* Interactive Playground */}
                     <div className="minecraft-panel relative">
-                        <img
-                            src="/mnemocyte.png"
-                            alt=""
-                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
-                        />
                         <div className="text-center mb-4">
                             <div className="w-16 h-16 mx-auto mb-3 relative overflow-hidden">
                                 {/* Enhanced Soccer field background */}
@@ -200,11 +190,6 @@ export default function Home() {
 
                     {/* Game Environment */}
                     <div className="minecraft-panel relative">
-                        <img
-                            src="/mnemocyte.png"
-                            alt=""
-                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
-                        />
                         <div className="text-center mb-4">
                             <div className="w-16 h-16 mx-auto mb-3 relative overflow-hidden">
                                 {/* Space background */}
@@ -309,11 +294,6 @@ export default function Home() {
                     </div>
                     {/* API Documentation */}
                     <div className="minecraft-panel relative">
-                        <img
-                            src="/mnemocyte.png"
-                            alt=""
-                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
-                        />
                         <div className="text-center mb-4">
                             <div className="w-16 h-16 mx-auto mb-3 relative overflow-hidden">
                                 {/* API/Code background */}
@@ -356,11 +336,6 @@ export default function Home() {
 
                     {/* Data Export & Fine-tuning */}
                     <div className="minecraft-panel relative">
-                        <img
-                            src="/mnemocyte.png"
-                            alt=""
-                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
-                        />
                         <div className="text-center mb-4">
                             <div className="w-16 h-16 mx-auto mb-3 relative overflow-hidden">
                                 {/* Data/Database background */}
@@ -408,11 +383,6 @@ export default function Home() {
 
                     {/* Meta Configuration */}
                     <div className="minecraft-panel relative">
-                        <img
-                            src="/mnemocyte.png"
-                            alt=""
-                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
-                        />
                         <div className="text-center mb-4">
                             <div className="w-16 h-16 mx-auto mb-3 relative overflow-hidden">
                                 {/* Configuration/Settings background */}
@@ -501,11 +471,6 @@ export default function Home() {
                 {/* Character Library Section */}
                 <div className="mt-6">
                     <div className="minecraft-panel relative">
-                        <img
-                            src="/mnemocyte.png"
-                            alt=""
-                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
-                        />
                         <div className="text-center">
                             <h3 className="text-minecraft font-minecraft text-white mb-3">
                                 📚 Character Library
