@@ -1,14 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 import { MinecraftButton, MinecraftPanel, MinecraftInput, MinecraftSelect, PixelAvatar } from '@/components/ui/minecraft-ui';
 import { generateRandomFOXP2Pattern, generateDefaultActions, NPCCharacter, FOXP2NeuralPattern, CharacterAction } from '@/lib/utils';
 
 export default function CharacterCreator() {
-    const searchParams = useSearchParams();
-    const editId = searchParams.get('edit');
-
     const [character, setCharacter] = useState<Partial<NPCCharacter>>({
         name: '',
         role: 'wanderer',
@@ -21,57 +17,6 @@ export default function CharacterCreator() {
     const [isSaving, setIsSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState<string>('');
     const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
-    // Load character for editing
-    useEffect(() => {
-        if (editId) {
-            loadCharacterForEdit(editId);
-        }
-    }, [editId]);
-
-    const loadCharacterForEdit = async (characterId: string) => {
-        setIsLoading(true);
-        try {
-            // Try to load from API first
-            const response = await fetch('/api/characters');
-            if (response.ok) {
-                const characters = await response.json();
-                const characterToEdit = characters.find((c: NPCCharacter) => c.id === characterId);
-
-                if (characterToEdit) {
-                    setCharacter(characterToEdit);
-                    setIsEditing(true);
-                    setSaveMessage('📝 Editing existing character');
-                    setTimeout(() => setSaveMessage(''), 3000);
-                } else {
-                    setSaveMessage('❌ Character not found');
-                    setTimeout(() => setSaveMessage(''), 3000);
-                }
-            } else {
-                // Fallback to localStorage
-                const localChars = JSON.parse(localStorage.getItem('mnemocyte-characters') || '[]');
-                const characterToEdit = localChars.find((c: NPCCharacter) => c.id === characterId);
-
-                if (characterToEdit) {
-                    setCharacter(characterToEdit);
-                    setIsEditing(true);
-                    setSaveMessage('📝 Editing existing character');
-                    setTimeout(() => setSaveMessage(''), 3000);
-                } else {
-                    setSaveMessage('❌ Character not found');
-                    setTimeout(() => setSaveMessage(''), 3000);
-                }
-            }
-        } catch (error) {
-            console.error('Error loading character for edit:', error);
-            setSaveMessage('❌ Failed to load character');
-            setTimeout(() => setSaveMessage(''), 3000);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const handleGenerateNewPattern = () => {
         setCharacter(prev => ({
@@ -179,7 +124,7 @@ export default function CharacterCreator() {
             };
 
             const response = await fetch('/api/characters', {
-                method: 'POST', // API handles both create and update in POST
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -258,57 +203,17 @@ export default function CharacterCreator() {
         }));
     };
 
-    if (isLoading) {
-        return (
-            <main className="min-h-screen bg-gradient-to-b from-minecraft-sky to-minecraft-grass p-4">
-                <div className="container mx-auto max-w-6xl">
-                    <MinecraftPanel className="text-center">
-                        <p className="font-minecraft text-white">⏳ Loading Character...</p>
-                    </MinecraftPanel>
-                </div>
-            </main>
-        );
-    }
-
     return (
         <main className="min-h-screen bg-gradient-to-b from-minecraft-sky to-minecraft-grass p-4">
-            {/* Fixed notification in top right */}
-            {saveMessage && (
-                <div className="fixed top-4 right-4 z-50 max-w-sm transform transition-all duration-300 ease-in-out animate-pulse">
-                    <MinecraftPanel className="shadow-xl border-4 border-minecraft-accent bg-minecraft-dark/90 backdrop-blur-sm">
-                        <p className="text-minecraft-sm font-minecraft text-center text-white px-3 py-2">
-                            {saveMessage}
-                        </p>
-                    </MinecraftPanel>
-                </div>
-            )}
-
             <div className="container mx-auto max-w-6xl">
-                {/* Header with Logo */}
+                {/* Header */}
                 <div className="minecraft-panel mb-6 text-center">
-                    <div className="flex justify-center mb-4">
-                        <img
-                            src="/mnemocyte.png"
-                            alt="Mnemocyte Logo"
-                            className="h-16 pixelated"
-                            style={{ width: 'auto' }}
-                        />
-                    </div>
-                    <h1 className="text-2xl font-minecraft text-white mb-2">
-                        {isEditing ? 'EDIT CHARACTER' : 'CHARACTER CREATOR'}
+                    <h1 className="text-3xl font-minecraft text-white mb-3">
+                        🧠 FOXP2 Character Creator
                     </h1>
-                    <p className="text-minecraft-xs text-gray-300">
-                        {isEditing ? `Editing: ${character.name || 'Unnamed Character'}` : 'Design NPCs with advanced neural memory systems'}
+                    <p className="text-minecraft-sm text-gray-300">
+                        Design NPCs with advanced neural memory systems
                     </p>
-                </div>
-
-                {/* Navigation */}
-                <div className="flex justify-start mb-4">
-                    <a href="/">
-                        <MinecraftButton variant="secondary" size="sm">
-                            ← Back to Home
-                        </MinecraftButton>
-                    </a>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -331,19 +236,19 @@ export default function CharacterCreator() {
                                 >
                                     {isGeneratingImage ? '⏳ Generating...' : '🎨 Generate Image'}
                                 </MinecraftButton>
-                                <h3 className="font-minecraft text-minecraft text-white mb-2">
+                                <h3 className="font-minecraft text-minecraft-lg text-white mb-3">
                                     {character.name || 'Unnamed NPC'}
                                 </h3>
-                                <p className="text-minecraft-xs text-gray-300 mb-2">
+                                <p className="text-minecraft-sm text-gray-300 mb-2">
                                     Role: {character.role}
                                 </p>
-                                <p className="text-minecraft-xs text-gray-300">
+                                <p className="text-minecraft-sm text-gray-300">
                                     FOXP2 Pattern: {character.foxp2Pattern?.name}
                                 </p>
 
                                 {/* Mood Indicator */}
                                 <div className="mt-4">
-                                    <p className="text-minecraft-xs text-gray-300 mb-2">Current Mood</p>
+                                    <p className="text-minecraft-sm text-gray-300 mb-2">Current Mood</p>
                                     <div className="w-full bg-gray-700 h-4 border-2 border-gray-500">
                                         <div
                                             className="h-full bg-minecraft-green transition-all duration-300"
@@ -361,7 +266,7 @@ export default function CharacterCreator() {
                         <MinecraftPanel title="Basic Information">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-minecraft-xs text-gray-300 mb-2">
+                                    <label className="block text-minecraft-sm text-gray-300 mb-2">
                                         Character Name
                                     </label>
                                     <MinecraftInput
@@ -371,7 +276,7 @@ export default function CharacterCreator() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-minecraft-xs text-gray-300 mb-2">
+                                    <label className="block text-minecraft-sm text-gray-300 mb-2">
                                         Role
                                     </label>
                                     <MinecraftSelect
@@ -400,7 +305,7 @@ export default function CharacterCreator() {
                         <MinecraftPanel title="🧠 FOXP2 Neural Pattern">
                             <div className="mb-4">
                                 <div className="flex justify-between items-center mb-3">
-                                    <p className="text-minecraft-xs text-gray-300">
+                                    <p className="text-minecraft-sm text-gray-300">
                                         Pattern ID: {character.foxp2Pattern?.name}
                                     </p>
                                     <MinecraftButton size="sm" onClick={handleGenerateNewPattern}>
@@ -411,13 +316,13 @@ export default function CharacterCreator() {
 
                             {/* Emotional Weights */}
                             <div className="mb-6">
-                                <h4 className="text-minecraft-sm font-minecraft text-white mb-3">
+                                <h4 className="text-minecraft-lg font-minecraft text-white mb-3">
                                     Emotional Weights
                                 </h4>
                                 <div className="grid grid-cols-2 gap-4">
                                     {character.foxp2Pattern && Object.entries(character.foxp2Pattern.emotionalWeights).map(([emotion, value]) => (
                                         <div key={emotion}>
-                                            <label className="block text-minecraft-xs text-gray-300 mb-1 capitalize">
+                                            <label className="block text-minecraft-sm text-gray-300 mb-1 capitalize">
                                                 {emotion}: {(value * 100).toFixed(0)}%
                                             </label>
                                             <input
@@ -436,13 +341,13 @@ export default function CharacterCreator() {
 
                             {/* Behavioral Traits */}
                             <div>
-                                <h4 className="text-minecraft-sm font-minecraft text-white mb-3">
+                                <h4 className="text-minecraft-lg font-minecraft text-white mb-3">
                                     Behavioral Traits
                                 </h4>
                                 <div className="grid grid-cols-2 gap-4">
                                     {character.foxp2Pattern && Object.entries(character.foxp2Pattern.behavioralTraits).map(([trait, value]) => (
                                         <div key={trait}>
-                                            <label className="block text-minecraft-xs text-gray-300 mb-1 capitalize">
+                                            <label className="block text-minecraft-sm text-gray-300 mb-1 capitalize">
                                                 {trait}: {(value * 100).toFixed(0)}%
                                             </label>
                                             <input
@@ -463,7 +368,7 @@ export default function CharacterCreator() {
                         {/* Character Actions */}
                         <MinecraftPanel title="Character Actions">
                             <div className="space-y-4">
-                                <p className="text-minecraft-xs text-gray-300">
+                                <p className="text-minecraft-sm text-gray-300">
                                     Define special actions your character can perform
                                 </p>
 
@@ -472,7 +377,7 @@ export default function CharacterCreator() {
                                         {character.actions.map((action, index) => (
                                             <div key={action.id} className="border border-gray-500 p-3 bg-gray-700">
                                                 <div className="flex justify-between items-start mb-2">
-                                                    <span className="text-minecraft-xs font-minecraft text-white">
+                                                    <span className="text-minecraft-sm font-minecraft text-white">
                                                         {action.name}
                                                     </span>
                                                     <MinecraftButton
@@ -486,7 +391,7 @@ export default function CharacterCreator() {
                                                         ❌
                                                     </MinecraftButton>
                                                 </div>
-                                                <p className="text-minecraft-xs text-gray-300">
+                                                <p className="text-minecraft-sm text-gray-300">
                                                     {action.description}
                                                 </p>
                                             </div>
@@ -513,7 +418,14 @@ export default function CharacterCreator() {
                             </div>
                         </MinecraftPanel>
 
-
+                        {/* Save Status Message */}
+                        {saveMessage && (
+                            <MinecraftPanel className="mb-4">
+                                <p className="text-minecraft-sm font-minecraft text-center text-white">
+                                    {saveMessage}
+                                </p>
+                            </MinecraftPanel>
+                        )}
 
                         {/* Actions */}
                         <div className="flex gap-4">
@@ -522,7 +434,7 @@ export default function CharacterCreator() {
                                 onClick={handleSaveCharacter}
                                 disabled={isSaving || !character.name?.trim()}
                             >
-                                {isSaving ? '⏳ Saving...' : (isEditing ? '💾 Update Character' : '💾 Save Character')}
+                                {isSaving ? '⏳ Saving...' : '💾 Save Character'}
                             </MinecraftButton>
                             <a href="/playground">
                                 <MinecraftButton variant="secondary" className="flex-1">

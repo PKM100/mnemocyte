@@ -1,20 +1,20 @@
 # Dependencies
-node_modules
-/.pnp
+node_modules/
+.pnp
 .pnp.js
-.yarn/install-state.gz
 
 # Testing
 /coverage
 
 # Next.js
-/.next/
-/out/
+.next/
+out/
 
 # Production
-/build
+build/
+dist/
 
-# Misc
+# Miscellaneous
 .DS_Store
 *.pem
 
@@ -24,15 +24,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # Local env files
-.env*.local
 .env
-
-# Database
-/prisma/migrations
-/generated
-
-# Docker
-docker-compose.override.yml
+.env*.local
 
 # Vercel
 .vercel
@@ -42,15 +35,8 @@ docker-compose.override.yml
 next-env.d.ts
 
 # IDE
-.vscode
-.idea
+.vscode/
+.idea/
 
-# Logs
-logs
-*.log
-
-# Logs
-logs
-*.log
-
-/generated/prisma
+# Database
+*.db-journal

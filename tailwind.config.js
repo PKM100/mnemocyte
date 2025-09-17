@@ -40,11 +40,12 @@ module.exports = {
                 'minecraft': ['"Press Start 2P"', 'monospace'],
             },
             fontSize: {
-                'minecraft-xs': ['8px', '12px'],
-                'minecraft-sm': ['10px', '14px'],
-                'minecraft': ['12px', '16px'],
-                'minecraft-lg': ['14px', '18px'],
-                'minecraft-xl': ['16px', '20px'],
+                'minecraft-xs': ['12px', '16px'],
+                'minecraft-sm': ['14px', '18px'],
+                'minecraft': ['16px', '20px'],
+                'minecraft-lg': ['18px', '22px'],
+                'minecraft-xl': ['20px', '24px'],
+                'minecraft-2xl': ['24px', '28px'],
             },
             spacing: {
                 'pixel': '1px',

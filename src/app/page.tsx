@@ -15,7 +15,7 @@ export default function Home() {
                     <p className="text-minecraft-sm text-gray-300 mb-4">
                         Smart NPCs with FOXP2 Neural Memory Systems
                     </p>
-                    <p className="text-minecraft-xs text-gray-400">
+                    <p className="text-minecraft-sm text-gray-400">
                         Create intelligent video game characters with emotions, actions, roles, and routines
                     </p>
                 </div>
@@ -72,7 +72,7 @@ export default function Home() {
                             <h2 className="text-minecraft-lg font-minecraft text-white mb-2">
                                 Character Creator
                             </h2>
-                            <p className="text-minecraft-xs text-gray-300 mb-4">
+                            <p className="text-minecraft-sm text-gray-300 mb-4">
                                 Design NPCs with custom FOXP2 neural patterns, emotions, and behavioral routines
                             </p>
                             <a href="/creator">
@@ -187,7 +187,7 @@ export default function Home() {
                             <h2 className="text-minecraft-lg font-minecraft text-white mb-2">
                                 Playground
                             </h2>
-                            <p className="text-minecraft-xs text-gray-300 mb-4">
+                            <p className="text-minecraft-sm text-gray-300 mb-4">
                                 Test and interact with individual NPCs in a controlled environment
                             </p>
                             <a href="/playground">
@@ -297,7 +297,7 @@ export default function Home() {
                             <h2 className="text-minecraft-lg font-minecraft text-white mb-2">
                                 Game World
                             </h2>
-                            <p className="text-minecraft-xs text-gray-300 mb-4">
+                            <p className="text-minecraft-sm text-gray-300 mb-4">
                                 Multi-character environment with up to 10 parallel NPCs with advanced AI behaviors
                             </p>
                             <a href="/world">
@@ -343,7 +343,7 @@ export default function Home() {
                             <h2 className="text-minecraft-lg font-minecraft text-white mb-2">
                                 API Docs
                             </h2>
-                            <p className="text-minecraft-xs text-gray-300 mb-4">
+                            <p className="text-minecraft-sm text-gray-300 mb-4">
                                 Complete REST API documentation with interactive testing suite
                             </p>
                             <a href="/docs">
@@ -395,12 +395,103 @@ export default function Home() {
                             <h2 className="text-minecraft-lg font-minecraft text-white mb-2">
                                 Data Export
                             </h2>
-                            <p className="text-minecraft-xs text-gray-300 mb-4">
+                            <p className="text-minecraft-sm text-gray-300 mb-4">
                                 Export conversation data for AI model fine-tuning and analysis
                             </p>
                             <a href="/data">
                                 <button className="minecraft-button w-full">
                                     Export Data
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Meta Configuration */}
+                    <div className="minecraft-panel relative">
+                        <img
+                            src="/mnemocyte.png"
+                            alt=""
+                            className="absolute top-2 right-2 w-4 h-4 pixelated opacity-30"
+                        />
+                        <div className="text-center mb-4">
+                            <div className="w-16 h-16 mx-auto mb-3 relative overflow-hidden">
+                                {/* Configuration/Settings background */}
+                                <div className="w-full h-full bg-gradient-to-br from-purple-800 via-indigo-900 to-purple-900 border-minecraft-thick border-purple-600 pixelated relative">
+                                    {/* Flaming Bike Gear animation */}
+                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <div className="w-10 h-10">
+                                            {/* Main bike gear body */}
+                                            <div className="w-full h-full bg-gradient-to-br from-orange-400 to-red-600 rounded-full pixelated relative animate-flame-flicker">
+
+                                                {/* Bike gear teeth - 12 teeth like a real bike gear */}
+                                                {/* Top teeth */}
+                                                <div className="absolute -top-1 left-1/2 w-1 h-2 bg-gradient-to-t from-orange-500 to-yellow-400 pixelated transform -translate-x-1/2"></div>
+
+                                                {/* Right side teeth */}
+                                                <div className="absolute -right-1 top-1/2 w-2 h-1 bg-gradient-to-r from-orange-500 to-yellow-400 pixelated transform -translate-y-1/2"></div>
+                                                <div className="absolute -right-0.5 top-2 w-1.5 h-1 bg-gradient-to-r from-orange-500 to-yellow-400 pixelated transform rotate-45 origin-left"></div>
+                                                <div className="absolute -right-0.5 bottom-2 w-1.5 h-1 bg-gradient-to-r from-orange-500 to-yellow-400 pixelated transform -rotate-45 origin-left"></div>
+
+                                                {/* Bottom teeth */}
+                                                <div className="absolute -bottom-1 left-1/2 w-1 h-2 bg-gradient-to-b from-orange-500 to-yellow-400 pixelated transform -translate-x-1/2"></div>
+
+                                                {/* Left side teeth */}
+                                                <div className="absolute -left-1 top-1/2 w-2 h-1 bg-gradient-to-l from-orange-500 to-yellow-400 pixelated transform -translate-y-1/2"></div>
+                                                <div className="absolute -left-0.5 top-2 w-1.5 h-1 bg-gradient-to-l from-orange-500 to-yellow-400 pixelated transform -rotate-45 origin-right"></div>
+                                                <div className="absolute -left-0.5 bottom-2 w-1.5 h-1 bg-gradient-to-l from-orange-500 to-yellow-400 pixelated transform rotate-45 origin-right"></div>
+
+                                                {/* Inner gear ring */}
+                                                <div className="absolute top-1/2 left-1/2 w-7 h-7 bg-gradient-to-br from-red-500 to-orange-600 rounded-full pixelated transform -translate-x-1/2 -translate-y-1/2"></div>
+
+                                                {/* Center mounting holes - like real bike gears */}
+                                                <div className="absolute top-1/2 left-1/2 w-2.5 h-2.5 bg-purple-900 rounded-full pixelated transform -translate-x-1/2 -translate-y-1/2"></div>
+                                                <div className="absolute top-1/2 left-1/2 w-1.5 h-1.5 bg-gradient-to-br from-yellow-200 to-orange-400 rounded-full pixelated transform -translate-x-1/2 -translate-y-1/2 animate-flame-flicker"></div>
+
+                                                {/* Bolt holes around center */}
+                                                <div className="absolute top-2 left-1/2 w-0.5 h-0.5 bg-black rounded-full pixelated transform -translate-x-1/2"></div>
+                                                <div className="absolute bottom-2 left-1/2 w-0.5 h-0.5 bg-black rounded-full pixelated transform -translate-x-1/2"></div>
+                                                <div className="absolute top-1/2 left-2 w-0.5 h-0.5 bg-black rounded-full pixelated transform -translate-y-1/2"></div>
+                                                <div className="absolute top-1/2 right-2 w-0.5 h-0.5 bg-black rounded-full pixelated transform -translate-y-1/2"></div>
+
+                                                {/* Subtle flame particles */}
+                                                <div className="absolute -top-0.5 left-2 w-0.5 h-0.5 bg-orange-400 pixelated animate-flame-particle" style={{ animationDelay: '0ms' }}></div>
+                                                <div className="absolute -right-0.5 top-3 w-0.5 h-0.5 bg-red-500 pixelated animate-flame-particle" style={{ animationDelay: '800ms' }}></div>
+                                                <div className="absolute -bottom-0.5 right-2 w-0.5 h-0.5 bg-yellow-400 pixelated animate-flame-particle" style={{ animationDelay: '1600ms' }}></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Secondary smaller gear */}
+                                    <div className="absolute top-2 right-2">
+                                        <div className="w-3 h-3 animate-spin-reverse-slow">
+                                            <div className="w-full h-full bg-gray-400 pixelated relative">
+                                                <div className="absolute -top-0.5 left-1/2 w-0.5 h-0.5 bg-gray-400 pixelated transform -translate-x-1/2"></div>
+                                                <div className="absolute -right-0.5 top-1/2 w-0.5 h-0.5 bg-gray-400 pixelated transform -translate-y-1/2"></div>
+                                                <div className="absolute -bottom-0.5 left-1/2 w-0.5 h-0.5 bg-gray-400 pixelated transform -translate-x-1/2"></div>
+                                                <div className="absolute -left-0.5 top-1/2 w-0.5 h-0.5 bg-gray-400 pixelated transform -translate-y-1/2"></div>
+                                                <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-purple-900 pixelated transform -translate-x-1/2 -translate-y-1/2"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Configuration symbols */}
+                                    <div className="absolute top-1 left-2 w-1 h-1 bg-white pixelated animate-pulse"></div>
+                                    <div className="absolute bottom-2 left-1 w-1 h-1 bg-cyan-400 pixelated animate-pulse delay-500"></div>
+                                    <div className="absolute bottom-1 right-4 w-1 h-1 bg-yellow-400 pixelated animate-pulse delay-1000"></div>
+
+                                    {/* Glow effect */}
+                                    <div className="absolute inset-0 bg-gradient-to-br from-purple-400/20 to-transparent animate-pulse duration-3000"></div>
+                                </div>
+                            </div>
+                            <h2 className="text-minecraft-lg font-minecraft text-white mb-2">
+                                Meta Config
+                            </h2>
+                            <p className="text-minecraft-sm text-gray-300 mb-4">
+                                Configure global actions, character types, and backstory templates
+                            </p>
+                            <a href="/meta-config">
+                                <button className="minecraft-button w-full">
+                                    Configure System
                                 </button>
                             </a>
                         </div>
@@ -419,7 +510,7 @@ export default function Home() {
                             <h3 className="text-minecraft font-minecraft text-white mb-3">
                                 📚 Character Library
                             </h3>
-                            <p className="text-minecraft-xs text-gray-300 mb-4">
+                            <p className="text-minecraft-sm text-gray-300 mb-4">
                                 View and manage your saved FOXP2 NPCs
                             </p>
                             <a href="/characters">
@@ -436,7 +527,7 @@ export default function Home() {
                     <h3 className="text-minecraft font-minecraft text-white mb-3">
                         🧠 FOXP2 Neural Memory System
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-minecraft-xs text-gray-300">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-minecraft-sm text-gray-300">
                         <div>
                             <strong className="text-foxp2-primary">Emotions:</strong> Dynamic mood tracking and emotional responses
                         </div>
@@ -454,7 +545,7 @@ export default function Home() {
 
                 {/* Footer */}
                 <div className="text-center mt-8">
-                    <p className="text-minecraft-xs text-gray-500">
+                    <p className="text-minecraft-sm text-gray-500">
                         Powered by AI • Neural Memory Architecture • Real-time Character Interactions
                     </p>
                 </div>

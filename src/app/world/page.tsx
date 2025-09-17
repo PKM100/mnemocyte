@@ -501,7 +501,7 @@ export default function GameWorld() {
     };
 
     return (
-        <main className="min-h-screen bg-gradient-to-b from-minecraft-dark-sky to-minecraft-dark-grass p-4">
+        <main className="min-h-screen bg-gradient-to-b from-minecraft-sky to-minecraft-grass p-4">
             <div className="container mx-auto max-w-7xl">
                 {/* Header with Logo */}
                 <div className="minecraft-panel mb-4 text-center">
@@ -525,7 +525,7 @@ export default function GameWorld() {
                 <div className="flex justify-center mb-4">
                     <MinecraftButton
                         onClick={() => window.location.href = '/'}
-                        className="text-minecraft-xs"
+                        className="text-minecraft-sm"
                     >
                         ← Back to Home
                     </MinecraftButton>
@@ -540,7 +540,7 @@ export default function GameWorld() {
                                 <div className="flex-1 overflow-y-auto mb-4 p-2 bg-black/30 border-minecraft">
                                     {messages.map((message) => (
                                         <div key={message.id} className="mb-2">
-                                            <span className={`text-minecraft-xs font-bold ${message.sender === 'User'
+                                            <span className={`text-minecraft-sm font-bold ${message.sender === 'User'
                                                 ? 'text-blue-400'
                                                 : message.sender === 'System'
                                                     ? 'text-yellow-400'
@@ -548,7 +548,7 @@ export default function GameWorld() {
                                                 }`}>
                                                 [{message.timestamp.toLocaleTimeString()}] {message.sender}:
                                             </span>
-                                            <span className="text-minecraft-xs text-white ml-2">
+                                            <span className="text-minecraft-sm text-white ml-2">
                                                 {message.message}
                                             </span>
                                         </div>
@@ -614,7 +614,7 @@ export default function GameWorld() {
                                 {activeCharacters.map((character) => (
                                     <div key={character.id} className="flex items-center justify-between p-2 bg-black/20 border-minecraft">
                                         <div>
-                                            <div className="text-minecraft-xs text-white font-bold">
+                                            <div className="text-minecraft-sm text-white font-bold">
                                                 {character.name}
                                             </div>
                                             <div className="text-minecraft-tiny text-gray-400">
@@ -630,7 +630,7 @@ export default function GameWorld() {
                                     </div>
                                 ))}
                                 {activeCharacters.length === 0 && (
-                                    <div className="text-minecraft-xs text-gray-400 text-center py-4">
+                                    <div className="text-minecraft-sm text-gray-400 text-center py-4">
                                         No active characters
                                     </div>
                                 )}
@@ -646,7 +646,7 @@ export default function GameWorld() {
                                     .map((character) => (
                                         <div key={character.id} className="flex items-center justify-between p-2 bg-black/20 border-minecraft">
                                             <div>
-                                                <div className="text-minecraft-xs text-white font-bold">
+                                                <div className="text-minecraft-sm text-white font-bold">
                                                     {character.name}
                                                 </div>
                                                 <div className="text-minecraft-tiny text-gray-400">
@@ -662,7 +662,7 @@ export default function GameWorld() {
                                         </div>
                                     ))}
                                 {availableCharacters.length === 0 && (
-                                    <div className="text-minecraft-xs text-gray-400 text-center py-4">
+                                    <div className="text-minecraft-sm text-gray-400 text-center py-4">
                                         No characters available
                                     </div>
                                 )}

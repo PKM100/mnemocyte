@@ -8,8 +8,7 @@ export const metadata: Metadata = {
     title: "Mnemocyte - Smart NPCs",
     description: "AI-powered system for creating intelligent video game characters with emotions, actions, roles, and routines using FOXP2 neural memory systems.",
     icons: {
-        icon: '/mnemocyte.png',
-        apple: '/mnemocyte.png',
+        icon: '/favicon.png',
     },
 };
 

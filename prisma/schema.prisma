@@ -1,147 +1,15 @@
-// Mnemocyte Smart NPCs Database Schema
+// This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-// Character model - stores NPC definitions
-model Character {
-  id          String   @id @default(cuid())
-  name        String
-  role        String
-  description String?
-  imageUrl    String?
-  
-  // FOXP2 Neural Pattern (stored as JSON)
-  foxp2Pattern String  // JSON as string for SQLite
-  
-  // Current state
-  currentMood Float    @default(0.5)
-  
-  // Memory and behavior
-  memoryBank  String   @default("[]")    // JSON as string
-  routines    String   @default("[]")    // JSON as string
-  actions     String   @default("[]")    // JSON as string
-  
-  // Metadata
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  isActive    Boolean  @default(true)
-  
-  // Relations
-  conversations ConversationParticipant[]
-  messages      Message[]
-  
-  @@map("characters")
-}
-
-// Conversation model - groups related messages
-model Conversation {
-  id          String   @id @default(cuid())
-  title       String?
-  type        String   @default("playground") // playground, world, group
-  
-  // Metadata
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  isActive    Boolean  @default(true)
-  
-  // Session data
-  sessionData String   @default("{}")  // JSON as string
-  
-  // Relations
-  participants ConversationParticipant[]
-  messages     Message[]
-  
-  @@map("conversations")
-}
-
-// Many-to-many relationship between conversations and characters
-model ConversationParticipant {
-  id             String       @id @default(cuid())
-  conversationId String
-  characterId    String
-  
-  // Participant state
-  joinedAt       DateTime     @default(now())
-  isActive       Boolean      @default(true)
-  lastSeen       DateTime     @default(now())
-  
-  // Relations
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  character      Character    @relation(fields: [characterId], references: [id], onDelete: Cascade)
-  
-  @@unique([conversationId, characterId])
-  @@map("conversation_participants")
-}
-
-// Message model - individual chat messages
-model Message {
-  id             String       @id @default(cuid())
-  conversationId String
-  characterId    String?      // null for system/user messages
-  
-  // Message content
-  content        String
-  type           String       @default("chat") // chat, system, action, thought
-  
-  // Context and metadata
-  metadata       String       @default("{}")  // JSON as string
-  
-  // Conversation order and timing
-  messageOrder   Int
-  timestamp      DateTime     @default(now())
-  
-  // Relations
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  character      Character?   @relation(fields: [characterId], references: [id], onDelete: SetNull)
-  
-  @@map("messages")
-}
-
-// Session model - tracks user sessions and state
-model Session {
-  id              String   @id @default(cuid())
-  
-  // Session data
-  sessionData     String   @default("{}")  // JSON as string
-  
-  // Active state
-  currentConversationId String?
-  
-  // Metadata
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  lastActivity    DateTime @default(now())
-  isActive        Boolean  @default(true)
-  
-  @@map("sessions")
-}
-
-// Character Memory model - for advanced memory systems
-model CharacterMemory {
-  id          String   @id @default(cuid())
-  characterId String
-  
-  // Memory content
-  type        String   // episodic, semantic, emotional
-  content     String
-  importance  Float    @default(0.5)
-  
-  // Context
-  context     String   @default("{}")  // JSON as string
-  tags        String   @default("")    // JSON string for SQLite compatibility
-  
-  // Temporal data
-  createdAt   DateTime @default(now())
-  lastAccessed DateTime @default(now())
-  accessCount Int      @default(1)
-  
-  @@map("character_memories")
 }

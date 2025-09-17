@@ -35,28 +35,16 @@ export default function Playground() {
             const response = await fetch('/api/characters');
             if (response.ok) {
                 const apiCharacters = await response.json();
-                // Filter out test characters
-                const filteredCharacters = apiCharacters.filter((char: NPCCharacter) =>
-                    !char.name.toLowerCase().includes('test')
-                );
-                setCharacters(filteredCharacters);
+                setCharacters(apiCharacters);
             } else {
                 // Fallback to localStorage
                 const localChars = JSON.parse(localStorage.getItem('mnemocyte-characters') || '[]');
-                // Filter out test characters from localStorage as well
-                const filteredLocalChars = localChars.filter((char: NPCCharacter) =>
-                    !char.name.toLowerCase().includes('test')
-                );
-                setCharacters(filteredLocalChars);
+                setCharacters(localChars);
             }
         } catch (err) {
             console.error('Error loading characters:', err);
             const localChars = JSON.parse(localStorage.getItem('mnemocyte-characters') || '[]');
-            // Filter out test characters from localStorage as well
-            const filteredLocalChars = localChars.filter((char: NPCCharacter) =>
-                !char.name.toLowerCase().includes('test')
-            );
-            setCharacters(filteredLocalChars);
+            setCharacters(localChars);
         }
     };
 
@@ -255,52 +243,42 @@ export default function Playground() {
     return (
         <main className="min-h-screen bg-gradient-to-b from-minecraft-sky to-minecraft-grass p-4">
             <div className="container mx-auto max-w-6xl">
-                {/* Header with Logo */}
+                {/* Header */}
                 <div className="minecraft-panel mb-6 text-center">
-                    <div className="flex justify-center mb-4">
-                        <img
-                            src="/mnemocyte.png"
-                            alt="Mnemocyte Logo"
-                            className="h-16 pixelated"
-                            style={{ width: 'auto' }}
-                        />
-                    </div>
                     <h1 className="text-2xl font-minecraft text-white mb-2">
-                        NEURAL PLAYGROUND
+                        🎮 FOXP2 Neural Playground
                     </h1>
-                    <p className="text-minecraft-xs text-gray-300">
+                    <p className="text-minecraft-sm text-gray-300 mb-4">
                         Interactive AI conversations with your NPCs
                     </p>
-                </div>
-
-                {/* Navigation */}
-                <div className="flex gap-4 justify-center flex-wrap mb-6">
-                    <Link href="/creator">
-                        <MinecraftButton size="sm">➕ Create Character</MinecraftButton>
-                    </Link>
-                    <Link href="/characters">
-                        <MinecraftButton size="sm" variant="secondary">📚 Character Library</MinecraftButton>
-                    </Link>
-                    {selectedCharacter && (
-                        <MinecraftButton
-                            size="sm"
-                            variant="danger"
-                            onClick={() => {
-                                setMessages([{
-                                    id: 'welcome',
-                                    sender: 'npc',
-                                    message: generateWelcomeMessage(selectedCharacter),
-                                    timestamp: new Date(),
-                                    emotion: 'neutral'
-                                }]);
-                            }}
-                        >
-                            🔄 Reset Chat
-                        </MinecraftButton>
-                    )}
-                    <Link href="/">
-                        <MinecraftButton size="sm" variant="secondary">🏠 Home</MinecraftButton>
-                    </Link>
+                    <div className="flex gap-4 justify-center flex-wrap">
+                        <Link href="/creator">
+                            <MinecraftButton size="sm">➕ Create Character</MinecraftButton>
+                        </Link>
+                        <Link href="/characters">
+                            <MinecraftButton size="sm" variant="secondary">📚 Character Library</MinecraftButton>
+                        </Link>
+                        {selectedCharacter && (
+                            <MinecraftButton
+                                size="sm"
+                                variant="danger"
+                                onClick={() => {
+                                    setMessages([{
+                                        id: 'welcome',
+                                        sender: 'npc',
+                                        message: generateWelcomeMessage(selectedCharacter),
+                                        timestamp: new Date(),
+                                        emotion: 'neutral'
+                                    }]);
+                                }}
+                            >
+                                🔄 Reset Chat
+                            </MinecraftButton>
+                        )}
+                        <Link href="/">
+                            <MinecraftButton size="sm" variant="secondary">🏠 Home</MinecraftButton>
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -309,7 +287,7 @@ export default function Playground() {
                         <MinecraftPanel title="Select Character">
                             {characters.length === 0 ? (
                                 <div className="text-center">
-                                    <p className="text-minecraft-xs text-gray-300 mb-4">
+                                    <p className="text-minecraft-sm text-gray-300 mb-4">
                                         No characters found!
                                     </p>
                                     <Link href="/creator">
@@ -336,10 +314,10 @@ export default function Playground() {
                                                     alt={character.name}
                                                 />
                                                 <div>
-                                                    <p className="text-minecraft-xs font-minecraft text-white">
+                                                    <p className="text-minecraft-sm font-minecraft text-white">
                                                         {character.name}
                                                     </p>
-                                                    <p className="text-minecraft-xs text-gray-400">
+                                                    <p className="text-minecraft-sm text-gray-400">
                                                         {getRoleEmoji(character.role)} {character.role}
                                                     </p>
                                                 </div>
@@ -378,17 +356,17 @@ export default function Playground() {
                                                     <h3 className="font-minecraft text-minecraft text-white">
                                                         {selectedCharacter.name}
                                                     </h3>
-                                                    <p className="text-minecraft-xs text-gray-300">
+                                                    <p className="text-minecraft-sm text-gray-300">
                                                         {getRoleEmoji(selectedCharacter.role)} {selectedCharacter.role} •
                                                         FOXP2: {selectedCharacter.foxp2Pattern.name}
                                                     </p>
                                                 </div>
-                                                <div className="text-minecraft-xs text-green-300 text-right">
+                                                <div className="text-minecraft-sm text-green-300 text-right">
                                                     <div>Messages: {messages.length - 1}</div>
                                                     <div>Mood: {selectedCharacter.currentMood}</div>
                                                 </div>
                                             </div>
-                                            <div className="grid grid-cols-2 gap-4 mt-2 text-minecraft-xs text-gray-400">
+                                            <div className="grid grid-cols-2 gap-4 mt-2 text-minecraft-sm text-gray-400">
                                                 <span>Sociability: {(selectedCharacter.foxp2Pattern.behavioralTraits.sociability * 100).toFixed(0)}%</span>
                                                 <span>Intelligence: {(selectedCharacter.foxp2Pattern.behavioralTraits.intelligence * 100).toFixed(0)}%</span>
                                                 <span>Creativity: {(selectedCharacter.foxp2Pattern.behavioralTraits.creativity * 100).toFixed(0)}%</span>
@@ -400,7 +378,7 @@ export default function Playground() {
                                     {/* Mood Control */}
                                     <div className="mb-4">
                                         <div className="flex justify-between items-center mb-2">
-                                            <label className="text-minecraft-xs text-gray-300 font-minecraft">
+                                            <label className="text-minecraft-sm text-gray-300 font-minecraft">
                                                 Current Mood: {(selectedCharacter.currentMood * 100).toFixed(0)}%
                                                 {selectedCharacter.currentMood > 0.8 ? ' 😄' :
                                                     selectedCharacter.currentMood > 0.6 ? ' 😊' :
@@ -432,7 +410,7 @@ export default function Playground() {
                                                 style={{ width: `${selectedCharacter.currentMood * 100}%` }}
                                             />
                                         </div>
-                                        <div className="flex justify-between text-minecraft-xs text-gray-500 mt-1">
+                                        <div className="flex justify-between text-minecraft-sm text-gray-500 mt-1">
                                             <span>Depressed</span>
                                             <span>Neutral</span>
                                             <span>Euphoric</span>
@@ -441,8 +419,8 @@ export default function Playground() {
 
                                     {/* Top Emotional Weights */}
                                     <div className="mb-4">
-                                        <h4 className="text-minecraft-xs font-minecraft text-gray-300 mb-2">Dominant Emotions</h4>
-                                        <div className="grid grid-cols-3 gap-2 text-minecraft-xs">
+                                        <h4 className="text-minecraft-sm font-minecraft text-gray-300 mb-2">Dominant Emotions</h4>
+                                        <div className="grid grid-cols-3 gap-2 text-minecraft-sm">
                                             {Object.entries(selectedCharacter.foxp2Pattern.emotionalWeights)
                                                 .sort(([, a], [, b]) => (b as number) - (a as number))
                                                 .slice(0, 3)
@@ -470,10 +448,10 @@ export default function Playground() {
                                                         : 'bg-gray-700 border-gray-600 text-gray-200'
                                                         }`}
                                                 >
-                                                    <p className={`text-minecraft-xs font-minecraft ${getEmotionColor(msg.emotion)}`}>
+                                                    <p className={`text-minecraft-sm font-minecraft ${getEmotionColor(msg.emotion)}`}>
                                                         {msg.message}
                                                     </p>
-                                                    <p className="text-minecraft-xs text-gray-500 mt-1">
+                                                    <p className="text-minecraft-sm text-gray-500 mt-1">
                                                         {msg.timestamp.toLocaleTimeString()}
                                                     </p>
                                                 </div>
@@ -482,7 +460,7 @@ export default function Playground() {
                                         {isTyping && (
                                             <div className="flex justify-start">
                                                 <div className="max-w-xs p-3 border-2 bg-gray-700 border-gray-600 pixelated">
-                                                    <p className="text-minecraft-xs font-minecraft text-gray-300">
+                                                    <p className="text-minecraft-sm font-minecraft text-gray-300">
                                                         {selectedCharacter.name} is thinking...
                                                     </p>
                                                 </div>
@@ -515,7 +493,7 @@ export default function Playground() {
                                 <h3 className="font-minecraft text-white mb-4">
                                     Select a Character to Start
                                 </h3>
-                                <p className="text-minecraft-xs text-gray-300">
+                                <p className="text-minecraft-sm text-gray-300">
                                     Choose an NPC from the left panel to begin your conversation
                                 </p>
                             </MinecraftPanel>
