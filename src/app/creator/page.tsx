@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MinecraftButton, MinecraftPanel, MinecraftInput, MinecraftSelect, PixelAvatar } from '@/components/ui/minecraft-ui';
-import { generateRandomFOXP2Pattern, generateDefaultActions, NPCCharacter, FOXP2NeuralPattern, CharacterAction } from '@/lib/utils';
+import { generateRandomFOXP2Pattern, generateDefaultActions, generateUUID, NPCCharacter, FOXP2NeuralPattern, CharacterAction } from '@/lib/utils';
 
 export default function CharacterCreator() {
     const [character, setCharacter] = useState<Partial<NPCCharacter>>({
         name: '',
         role: 'wanderer',
-        foxp2Pattern: generateRandomFOXP2Pattern(),
+        foxp2Pattern: undefined, // Initialize as undefined to prevent hydration mismatch
         currentMood: 0.5,
         memoryBank: [],
         routines: [],
@@ -17,6 +17,16 @@ export default function CharacterCreator() {
     const [isSaving, setIsSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState<string>('');
     const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+
+    // Generate FOXP2 pattern after component mounts to prevent hydration mismatch
+    useEffect(() => {
+        if (!character.foxp2Pattern) {
+            setCharacter(prev => ({
+                ...prev,
+                foxp2Pattern: generateRandomFOXP2Pattern()
+            }));
+        }
+    }, [character.foxp2Pattern]);
 
     const handleGenerateNewPattern = () => {
         setCharacter(prev => ({
@@ -112,7 +122,7 @@ export default function CharacterCreator() {
 
         try {
             const fullCharacter: NPCCharacter = {
-                id: character.id || `npc_${Date.now()}_${Math.random().toString(36).substring(7)}`,
+                id: character.id || `npc_${generateUUID()}`,
                 name: character.name.trim(),
                 role: character.role || 'wanderer',
                 foxp2Pattern: character.foxp2Pattern,
@@ -166,7 +176,8 @@ export default function CharacterCreator() {
                 foxp2Pattern: generateRandomFOXP2Pattern(),
                 currentMood: 0.5,
                 memoryBank: [],
-                routines: []
+                routines: [],
+                actions: generateDefaultActions('wanderer')
             });
             setSaveMessage('🔄 Character reset!');
             setTimeout(() => setSaveMessage(''), 3000);
@@ -421,7 +432,7 @@ export default function CharacterCreator() {
                                     variant="secondary"
                                     onClick={() => {
                                         const newAction: CharacterAction = {
-                                            id: `action_${Date.now()}`,
+                                            id: `action_${generateUUID()}`,
                                             name: getRoleBasedAction(character.role || 'wanderer'),
                                             description: getRoleBasedActionDescription(character.role || 'wanderer')
                                         };
