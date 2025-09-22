@@ -344,7 +344,15 @@ function getMoodInfluence(mood: number) {
 }
 
 async function callAIService(systemPrompt: string, userMessage: string, history: any[]) {
-    // Try Copilot Studio as primary
+    // Try Azure OpenAI first (primary AI service)
+    const AZURE_OPENAI_ENDPOINT = process.env.AZURE_OPENAI_ENDPOINT;
+    const AZURE_OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY;
+
+    if (AZURE_OPENAI_ENDPOINT && AZURE_OPENAI_API_KEY) {
+        return await callAzureOpenAI(systemPrompt, userMessage, history);
+    }
+
+    // Try Copilot Studio as fallback
     const COPILOT_STUDIO_ENDPOINT = process.env.COPILOT_STUDIO_ENDPOINT;
     const COPILOT_STUDIO_TOKEN = process.env.COPILOT_STUDIO_TOKEN;
 
@@ -365,7 +373,62 @@ async function callAIService(systemPrompt: string, userMessage: string, history:
     return null;
 }
 
-// ...existing code...
+async function callAzureOpenAI(systemPrompt: string, userMessage: string, history: any[]) {
+    try {
+        const messages = [
+            { role: 'system', content: systemPrompt },
+            ...history.slice(-5).map(msg => ({
+                role: msg.sender === 'user' ? 'user' : 'assistant',
+                content: msg.message
+            })),
+            { role: 'user', content: userMessage }
+        ];
+
+        const endpoint = process.env.AZURE_OPENAI_ENDPOINT || "https://1ptest-project-resource.cognitiveservices.azure.com/";
+        const apiKey = process.env.AZURE_OPENAI_API_KEY;
+        const apiVersion = process.env.AZURE_OPENAI_API_VERSION || "2025-01-01-preview";
+        const deployment = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || "gpt-4.1";
+
+        if (!apiKey) {
+            throw new Error('Azure OpenAI API key is not configured');
+        }
+
+        // Use direct fetch for cognitiveservices.azure.com endpoints
+        const url = `${endpoint}openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'api-key': apiKey
+            },
+            body: JSON.stringify({
+                messages: messages,
+                max_tokens: 300,
+                temperature: 0.9,
+                top_p: 0.95,
+                frequency_penalty: 0.3,
+                presence_penalty: 0.6
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Azure OpenAI API error: ${response.status} ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        const aiResponse = result.choices?.[0]?.message?.content || 'I need a moment to think...';
+
+        return {
+            response: aiResponse,
+            emotion: 'neutral',
+            moodChange: Math.random() * 0.1 - 0.05 // Small random mood change
+        };
+    } catch (error) {
+        console.error('Azure OpenAI API error:', error);
+        return null;
+    }
+}
 
 async function callOpenAI(systemPrompt: string, userMessage: string, history: any[]) {
     try {
