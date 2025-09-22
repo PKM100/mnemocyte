@@ -10,11 +10,12 @@ type Params = {
 // GET /api/rooms/[id]/members - Get room members
 export async function GET(
     request: NextRequest,
-    { params }: { params: Params }
+    { params }: { params: Promise<Params> }
 ) {
+    const resolvedParams = await params;
     try {
         const room = await prisma.room.findUnique({
-            where: { id: params.id }
+            where: { id: resolvedParams.id }
         });
 
         if (!room) {
@@ -22,7 +23,7 @@ export async function GET(
         }
 
         const members = await prisma.roomMember.findMany({
-            where: { roomId: params.id },
+            where: { roomId: resolvedParams.id },
             include: {
                 character: true
             },
@@ -49,7 +50,7 @@ export async function GET(
         }));
 
         return NextResponse.json({
-            roomId: params.id,
+            roomId: resolvedParams.id,
             members: transformedMembers,
             totalMembers: transformedMembers.length
         });
@@ -64,8 +65,9 @@ export async function GET(
 // POST /api/rooms/[id]/members - Add character to room
 export async function POST(
     request: NextRequest,
-    { params }: { params: Params }
+    { params }: { params: Promise<Params> }
 ) {
+    const resolvedParams = await params;
     try {
         const data = await request.json();
 
@@ -75,7 +77,7 @@ export async function POST(
 
         // Check if room exists
         const room = await prisma.room.findUnique({
-            where: { id: params.id },
+            where: { id: resolvedParams.id },
             include: {
                 _count: {
                     select: { members: true }
@@ -114,7 +116,7 @@ export async function POST(
         // Check if character is already in room
         const existingMember = await prisma.roomMember.findFirst({
             where: {
-                roomId: params.id,
+                roomId: resolvedParams.id,
                 characterId: data.characterId
             }
         });
@@ -127,7 +129,7 @@ export async function POST(
         const member = await prisma.roomMember.create({
             data: {
                 id: `member_${Date.now()}_${Math.random().toString(36).substring(7)}`,
-                roomId: params.id,
+                roomId: resolvedParams.id,
                 characterId: data.characterId,
                 role: data.role || 'member',
                 isActive: true,
@@ -167,8 +169,9 @@ export async function POST(
 // DELETE /api/rooms/[id]/members - Remove character from room
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: Params }
+    { params }: { params: Promise<Params> }
 ) {
+    const resolvedParams = await params;
     try {
         const { searchParams } = new URL(request.url);
         const characterId = searchParams.get('characterId');
@@ -182,7 +185,7 @@ export async function DELETE(
 
         // Check if room exists
         const room = await prisma.room.findUnique({
-            where: { id: params.id }
+            where: { id: resolvedParams.id }
         });
 
         if (!room) {
@@ -190,7 +193,7 @@ export async function DELETE(
         }
 
         // Find member to remove
-        const whereClause: any = { roomId: params.id };
+        const whereClause: any = { roomId: resolvedParams.id };
         if (memberId) {
             whereClause.id = memberId;
         } else if (characterId) {

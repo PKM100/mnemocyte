@@ -463,7 +463,7 @@ export default function ApiDocumentationPage() {
                                 <div className="text-center text-gray-300 py-8">
                                     <div className="bg-gray-800 border-2 border-gray-600 rounded-lg p-6">
                                         <p className="text-minecraft-md font-minecraft mb-2">No test results available</p>
-                                        <p className="text-minecraft-sm text-gray-400">Click "Run API Tests" above to test all endpoints and see results</p>
+                                        <p className="text-minecraft-sm text-gray-400">Click &quot;Run API Tests&quot; above to test all endpoints and see results</p>
                                     </div>
                                 </div>
                             )}

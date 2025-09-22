@@ -10,8 +10,9 @@ type Params = {
 // GET /api/rooms/[id]/chat - Get room messages
 export async function GET(
     request: NextRequest,
-    { params }: { params: Params }
+    { params }: { params: Promise<Params> }
 ) {
+    const resolvedParams = await params;
     try {
         const { searchParams } = new URL(request.url);
         const limit = parseInt(searchParams.get('limit') || '50');
@@ -21,7 +22,7 @@ export async function GET(
 
         // Check if room exists
         const room = await prisma.room.findUnique({
-            where: { id: params.id }
+            where: { id: resolvedParams.id }
         });
 
         if (!room) {
@@ -29,7 +30,7 @@ export async function GET(
         }
 
         // Build where clause for timestamp filtering
-        const whereClause: any = { roomId: params.id };
+        const whereClause: any = { roomId: resolvedParams.id };
         if (before) {
             whereClause.timestamp = { ...whereClause.timestamp, lt: new Date(before) };
         }
@@ -66,7 +67,7 @@ export async function GET(
         }));
 
         return NextResponse.json({
-            roomId: params.id,
+            roomId: resolvedParams.id,
             messages: transformedMessages,
             hasMore: messages.length === limit
         });
@@ -81,8 +82,9 @@ export async function GET(
 // POST /api/rooms/[id]/chat - Send message to room
 export async function POST(
     request: NextRequest,
-    { params }: { params: Params }
+    { params }: { params: Promise<Params> }
 ) {
+    const resolvedParams = await params;
     try {
         const data = await request.json();
 
@@ -92,7 +94,7 @@ export async function POST(
 
         // Check if room exists and is active
         const room = await prisma.room.findUnique({
-            where: { id: params.id },
+            where: { id: resolvedParams.id },
             include: {
                 members: {
                     include: {
@@ -128,7 +130,7 @@ export async function POST(
 
         // Get the next message order number
         const lastMessage = await prisma.roomMessage.findFirst({
-            where: { roomId: params.id },
+            where: { roomId: resolvedParams.id },
             orderBy: { messageOrder: 'desc' }
         });
 
@@ -138,7 +140,7 @@ export async function POST(
         const message = await prisma.roomMessage.create({
             data: {
                 id: `roommsg_${Date.now()}_${Math.random().toString(36).substring(7)}`,
-                roomId: params.id,
+                roomId: resolvedParams.id,
                 characterId: data.characterId || null,
                 content: data.content,
                 type: data.type || 'text',
@@ -155,7 +157,7 @@ export async function POST(
         if (data.characterId) {
             await prisma.roomMember.updateMany({
                 where: {
-                    roomId: params.id,
+                    roomId: resolvedParams.id,
                     characterId: data.characterId
                 },
                 data: {
@@ -166,7 +168,7 @@ export async function POST(
 
         // Update room's updatedAt timestamp
         await prisma.room.update({
-            where: { id: params.id },
+            where: { id: resolvedParams.id },
             data: { updatedAt: new Date() }
         });
 

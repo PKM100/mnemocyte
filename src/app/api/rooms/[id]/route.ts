@@ -3,9 +3,9 @@ import { PrismaClient } from '../../../../../generated/prisma';
 
 const prisma = new PrismaClient();
 
-type Params = {
+type Params = Promise<{
     id: string;
-};
+}>;
 
 // GET /api/rooms/[id] - Get room details
 export async function GET(
@@ -13,13 +13,14 @@ export async function GET(
     { params }: { params: Params }
 ) {
     try {
+        const { id } = await params;
         const { searchParams } = new URL(request.url);
         const includeMembers = searchParams.get('includeMembers') !== 'false'; // Default to true
         const includeMessages = searchParams.get('includeMessages') === 'true';
         const messageLimit = parseInt(searchParams.get('messageLimit') || '50');
 
         const room = await prisma.room.findUnique({
-            where: { id: params.id },
+            where: { id },
             include: {
                 members: includeMembers ? {
                     include: {
@@ -106,10 +107,11 @@ export async function PUT(
     { params }: { params: Params }
 ) {
     try {
+        const { id } = await params;
         const data = await request.json();
 
         const existingRoom = await prisma.room.findUnique({
-            where: { id: params.id }
+            where: { id }
         });
 
         if (!existingRoom) {
@@ -125,7 +127,7 @@ export async function PUT(
         if (data.metadata !== undefined) updateData.metadata = JSON.stringify(data.metadata);
 
         const room = await prisma.room.update({
-            where: { id: params.id },
+            where: { id },
             data: updateData,
             include: {
                 _count: {
@@ -167,8 +169,9 @@ export async function DELETE(
     { params }: { params: Params }
 ) {
     try {
+        const { id } = await params;
         const existingRoom = await prisma.room.findUnique({
-            where: { id: params.id }
+            where: { id }
         });
 
         if (!existingRoom) {
@@ -177,15 +180,15 @@ export async function DELETE(
 
         // Delete in order due to foreign key constraints
         await prisma.roomMessage.deleteMany({
-            where: { roomId: params.id }
+            where: { roomId: id }
         });
 
         await prisma.roomMember.deleteMany({
-            where: { roomId: params.id }
+            where: { roomId: id }
         });
 
         await prisma.room.delete({
-            where: { id: params.id }
+            where: { id }
         });
 
         return NextResponse.json({ success: true });

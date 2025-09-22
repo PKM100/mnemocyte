@@ -418,7 +418,7 @@ Respond in character based on these traits.`;
                             <div>
                                 <strong className="text-white text-minecraft-xs">Hugging Face Dataset:</strong>
                                 <code className="block bg-gray-800 text-green-300 p-2 rounded mt-1 text-minecraft-tiny font-mono">
-                                    from datasets import Dataset; Dataset.from_json("mnemocyte-data.json")
+                                    from datasets import Dataset; Dataset.from_json(&quot;mnemocyte-data.json&quot;)
                                 </code>
                             </div>
                         </div>
@@ -491,7 +491,7 @@ Respond in character based on these traits.`;
                             {exportFormat === 'jsonl' && (
                                 <div className="mt-3 p-2 bg-yellow-900/30 border-minecraft">
                                     <p className="text-minecraft-tiny text-yellow-300">
-                                        JSONL format is optimized for fine-tuning language models with OpenAI, Azure OpenAI, or similar services.
+                                        JSONL format is optimized for fine-tuning language models with OpenAI or similar services.
                                     </p>
                                 </div>
                             )}
