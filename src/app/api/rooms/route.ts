@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '../../../../generated/prisma';
+import { prisma } from "@/lib/db";
 
-const prisma = new PrismaClient();
 
 // GET /api/rooms - List all rooms
 export async function GET(request: NextRequest) {

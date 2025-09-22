@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
         const characters = await prisma.character.findMany({
             where: includeInactive ? {} : { isActive: true },
             include: {
-                conversations: {
+                participants: {
                     where: {
                         conversation: { isActive: true }
                     },

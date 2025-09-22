@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NPCCharacter } from '@/lib/utils';
-import { PrismaClient } from '../../../../generated/prisma';
-
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/db';
 
 interface ChatRequest {
     message: string;

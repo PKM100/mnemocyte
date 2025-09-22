@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { generateUUID } from '@/lib/utils';
 
 export async function GET() {
     try {
@@ -31,6 +32,7 @@ export async function POST(request: Request) {
 
         const memory = await prisma.memoryTemplate.create({
             data: {
+                id: generateUUID(),
                 heading,
                 content: content || ''
             }
